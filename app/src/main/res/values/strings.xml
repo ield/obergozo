@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Obergozo</string>
+    <string name="nacimiento">Fecha de nacimiento</string>
+    <string name="nacimientoHint">Pulsa para seleccionar la fecha</string>
+    <string name="sexo">¿Es niña o niño?</string>
+    <string name="longitud">Longitud (cm)</string>
+    <string name="longitudHint">Pulsa para introducir la longitud</string>
+    <string name="peso">Peso (Kg)</string>
+    <string name="pesoHint">Pulsa para introducir el peso</string>
+    <string name="pCraneal">Perímetro Craneal (cm)</string>
+    <string name="pCranealHint">Pulsa para introducir el perímetro craneal</string>
+    <string name="calcula">Calcula</string>
+    <string name="niña">Niña</string>
+    <string name="niño">Niño</string>
+    <string name="title_activity_graph">Graph</string>
+    <string name="next">Next</string>
+    <string name="title_activity_inicio">Inicio</string>
+</resources>
