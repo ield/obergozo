@@ -1,7 +1,16 @@
 package com.example.myapplication;
 
 /**
- * Created by Nacho on 24/12/2018.
+ * Engineer: ield
+ *
+ * Class CalculadoraIMCChicas
+ *  Calculates IMC in girls using lear approximation from the data provided
+ *  by official sources
+ *
+ * Attributes:
+ *  edad: array of the ages of the babys in years
+ *  p50: 50th percentile of the data
+ *  p97: 97th percentile of the data
  */
 
 public class CalculadoraIMCChicas {

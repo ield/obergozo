@@ -20,13 +20,14 @@ public class CalculadoraPesoChicas {
         double p97 = getP97(intervalo, fraccion);
         double sd = (p97-p50)/1.88;
         double z = (medida-p50)/sd;
-        percentil = (CNDF(z));
+        percentil = CNDF(z);
     }
 
     public double getPercentil(){return this.percentil;}
 
     /*
-    Este metodo devuelve la posicion en el array edad en donde se encuentra la edad
+    Este metodo devuelve la posicion en el array edad en donde se encuentra la edad.
+    todo No tiene sentido que se repita en todas las clase, habria que acabar con esto.
      */
     private int intervalo(double age){
         int i;

@@ -1,3 +1,12 @@
+/**
+ * Engineer: ield
+ *
+ * Class bebe
+ * Attributes:
+ *  nacimiento: sused to calculate  the age of the baby
+ *  datos: all data of the baby, of type dato *
+ */
+
 package com.example.myapplication;
 
 
