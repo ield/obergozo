@@ -18,8 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -145,7 +147,20 @@ public class Graph extends AppCompatActivity {
         mScaleDetector = new ScaleGestureDetector(this, new ScaleGestureDetector.SimpleOnScaleGestureListener(){
             public boolean onScale (ScaleGestureDetector detector){
                 float scale = 1-detector.getScaleFactor();
-                return super.onScale(detector);
+
+                float prevScale = mScale;
+                mScale += scale;
+
+                if(mScale < 0.1f) mScale = 0.1f;
+                if(mScale > 10f) mScale = 10f;
+
+                ScaleAnimation scaleAnimation = new ScaleAnimation(1f/prevScale, 1f/mScale,1f/prevScale, 1f/mScale, detector.getFocusX(), detector.getFocusY());
+                scaleAnimation.setDuration(0);
+                scaleAnimation.setFillAfter(true);
+
+                lengthGraph.startAnimation(scaleAnimation);
+
+                return true;
             }
         });
 
@@ -300,6 +315,34 @@ public class Graph extends AppCompatActivity {
             i+=0.00001;
         }
         return i;
+    }
+
+
+    /**
+     * Tema de la clase para el zoom
+     */
+
+
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onDown(MotionEvent e){
+            return true;
+        }
+        public boolean onDoubleTap(MotionEvent e){
+            return true;
+        }
+
+
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        super.dispatchTouchEvent(ev);
+
+        mScaleDetector.onTouchEvent(ev);
+        gestureDetector.onTouchEvent(ev);
+        return gestureDetector.onTouchEvent(ev);
     }
 
 }
