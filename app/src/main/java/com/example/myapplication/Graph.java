@@ -78,11 +78,21 @@ public class Graph extends AppCompatActivity {
     private double[] p97 = {53.64, 64.4, 70.92, 75.68, 80.01, 86.57, 92.12, 98.62, 102.82, 107.07, 111.28, 115.41, 119.4, 124, 126.18, 129.21, 132.73, 136.13, 139.3, 142.47, 145.44, 148.16, 150.73, 153.43, 156.08, 158.36, 161.07, 163.93, 167.24, 171.25, 176.21, 180.45, 183.64, 185.61, 186.78, 187.53, 188.24, 188.46, 188.46};
 
     private List<Entry> entriesMedidas;
+    private List<Entry> entriesP03;
+    private List<Entry> entriesP10;
+    private List<Entry> entriesP25;
     private List<Entry> entriesP50;
+    private List<Entry> entriesP75;
+    private List<Entry> entriesP90;
     private List<Entry> entriesP97;
 
     private LineDataSet lineaMedidas;
+    private LineDataSet lineaP03;
+    private LineDataSet lineaP10;
+    private LineDataSet lineaP25;
     private LineDataSet lineaP50;
+    private LineDataSet lineaP75;
+    private LineDataSet lineaP90;
     private LineDataSet lineaP97;
 
     private List<ILineDataSet> todasMedidas = new ArrayList<ILineDataSet>();
@@ -163,6 +173,11 @@ public class Graph extends AppCompatActivity {
     private void dibujaPercentiles(){
         dibujaPercentil50();
         dibujaPercentil97();
+        dibujaPercentil03();
+        dibujaPercentil10();
+        dibujaPercentil25();
+        dibujaPercentil75();
+        dibujaPercentil90();
     }
 
     private void dibujaPercentil50(){
@@ -170,12 +185,12 @@ public class Graph extends AppCompatActivity {
         for(int i = 0; i<edad.length; i++){
             entriesP50.add(new Entry((float)edad[i], (float)p50[i]));
         }
-        lineaP50 = new LineDataSet(entriesP50, "Percentil 50");
+        lineaP50 = new LineDataSet(entriesP50, "Perc. 50");
         lineaP50.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP50.setColor(ColorTemplate.rgb("FF9800"));
         lineaP50.setDrawCircles(false);
         lineaP50.setDrawValues(false);
-        lineaP50.setLineWidth(1);
+        lineaP50.setLineWidth(2);
         lineaP50.enableDashedLine(10,10,0);
 
         todasMedidas.add(lineaP50);
@@ -188,7 +203,7 @@ public class Graph extends AppCompatActivity {
         }
         //getResources().getColor(R.color.red);
 
-        lineaP97 = new LineDataSet(entriesP97, "Percentil 97");
+        lineaP97 = new LineDataSet(entriesP97, "Perc. 97");
         lineaP97.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP97.setColor(ColorTemplate.rgb("FF9800"));
         lineaP97.setDrawCircles(false);
@@ -198,6 +213,139 @@ public class Graph extends AppCompatActivity {
         todasMedidas.add(lineaP97);
     }
 
+    private void dibujaPercentil03(){
+        entriesP03 = new ArrayList<Entry>();
+
+        double z = getZ(0.03);
+
+        for(int i = 0; i<edad.length; i++){
+            double sd = (p97[i] - p50[i])/1.88;
+            double perc = z*sd + p50[i];
+
+            entriesP03.add(new Entry((float)edad[i], (float)perc));
+        }
+        lineaP03 = new LineDataSet(entriesP03, "Perc. 3");
+        lineaP03.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineaP03.setColor(ColorTemplate.rgb("FF9800"));
+        lineaP03.setDrawCircles(false);
+        lineaP03.setDrawValues(false);
+        lineaP03.setLineWidth(3);
+
+        todasMedidas.add(lineaP03);
+    }
+
+    private void dibujaPercentil10(){
+        entriesP10 = new ArrayList<Entry>();
+
+        double z = getZ(0.1);
+
+        for(int i = 0; i<edad.length; i++){
+            double sd = (p97[i] - p50[i])/1.88;
+            double perc = z*sd + p50[i];
+
+            entriesP10.add(new Entry((float)edad[i], (float)perc));
+        }
+        lineaP10 = new LineDataSet(entriesP10, "Perc. 10");
+        lineaP10.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineaP10.setColor(ColorTemplate.rgb("3b83bd"));
+        lineaP10.setDrawCircles(false);
+        lineaP10.setDrawValues(false);
+        lineaP10.setLineWidth(1);
+        lineaP10.enableDashedLine(5,5,0);
+
+        todasMedidas.add(lineaP10);
+    }
+
+    private void dibujaPercentil25(){
+        entriesP25 = new ArrayList<Entry>();
+
+        double z = getZ(0.25);
+
+        for(int i = 0; i<edad.length; i++){
+            double sd = (p97[i] - p50[i])/1.88;
+            double perc = z*sd + p50[i];
+
+            entriesP25.add(new Entry((float)edad[i], (float)perc));
+        }
+        lineaP25 = new LineDataSet(entriesP25, "Perc. 25");
+        lineaP25.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineaP25.setColor(ColorTemplate.rgb("3b83bd"));
+        lineaP25.setDrawCircles(false);
+        lineaP25.setDrawValues(false);
+        lineaP25.setLineWidth(1);
+        lineaP25.enableDashedLine(5,5,0);
+
+
+        todasMedidas.add(lineaP25);
+    }
+
+    private void dibujaPercentil75(){
+        entriesP75 = new ArrayList<Entry>();
+
+        double z = getZ(0.75);
+
+        for(int i = 0; i<edad.length; i++){
+            double sd = (p97[i] - p50[i])/1.88;
+            double perc = z*sd + p50[i];
+
+            entriesP75.add(new Entry((float)edad[i], (float)perc));
+        }
+        lineaP75 = new LineDataSet(entriesP75, "Perc. 75");
+        lineaP75.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineaP75.setColor(ColorTemplate.rgb("3b83bd"));
+        lineaP75.setDrawCircles(false);
+        lineaP75.setDrawValues(false);
+        lineaP75.setLineWidth(1);
+        lineaP75.enableDashedLine(5,5,0);
+
+
+        todasMedidas.add(lineaP75);
+    }
+
+    private void dibujaPercentil90(){
+        entriesP90 = new ArrayList<Entry>();
+
+        double z = getZ(0.9);
+
+        for(int i = 0; i<edad.length; i++){
+            double sd = (p97[i] - p50[i])/1.88;
+            double perc = z*sd + p50[i];
+
+            entriesP90.add(new Entry((float)edad[i], (float)perc));
+        }
+        lineaP90 = new LineDataSet(entriesP90, "Perc 90");
+        lineaP90.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineaP90.setColor(ColorTemplate.rgb("3b83bd"));
+        lineaP90.setDrawCircles(false);
+        lineaP90.setDrawValues(false);
+        lineaP90.setLineWidth(1);
+        lineaP90.enableDashedLine(5,5,0);
+
+
+        todasMedidas.add(lineaP90);
+    }
+
+
+
+    /**
+     * El siguiente metodo lo obtuve de Pablito Coding (https://www.lawebdelprogramador.com/foros/Java/1274298-funciones-estadistica-en-JAVA.html)
+     * El de despues lo obtuve partiendo de lo que encontre en el mismo site, modificando otro de los metodos que habia.
+     */
+    private double calculaz(double v){ //funcion de densidad de probabilidad normal
+        double N=Math.exp(-Math.pow(v, 2)/2)/Math.sqrt(2*Math.PI);
+        return N;
+    }
+
+    private double getZ(double p){
+
+        double acumulador = 0.00000028666;
+        double i = -5;
+        while(p > acumulador){
+            acumulador += (0.00001 * calculaz(i - 0.000005));
+            i+=0.00001;
+        }
+        return i;
+    }
 
 }
 
