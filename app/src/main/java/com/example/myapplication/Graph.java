@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.os.Bundle;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarEntry;
@@ -18,6 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +106,7 @@ public class Graph extends AppCompatActivity {
 
     private LineChart lengthGraph;
 
+    private TextView textTitulo;
 
 
     @Override
@@ -111,6 +117,7 @@ public class Graph extends AppCompatActivity {
         //setSupportActionBar(toolbar);
 
         lengthGraph=(LineChart)findViewById(R.id.lengthGraph);
+        textTitulo = (TextView) findViewById(R.id.textTitulo);
 
         Bundle objetoRecibido = getIntent().getExtras();
         if(objetoRecibido!=null){
@@ -131,22 +138,28 @@ public class Graph extends AppCompatActivity {
         dibujaPercentiles();
 
         ajustaEjes();
+        ajustaLeyenda();
 
         lineData = new LineData(todasMedidas);
         lengthGraph.setData(lineData);
+
         lengthGraph.invalidate();
+        //lengthGraph.animateXY(2000, 2000);
 
     }
 
     private void ajustaEjes(){
         //Ajustamos el eje x
+
         XAxis ejeX = lengthGraph.getXAxis();
+
         ejeX.setPosition(XAxis.XAxisPosition.BOTTOM);
         ejeX.setEnabled(true);
-        ejeX.setDrawLabels(true);
+        ejeX.setDrawLabels(true);//Esto es solo para poner los numeros del eje
         ejeX.setDrawAxisLine(true);
         ejeX.setAxisMaximum(18);
         ejeX.setAxisMinimum(0);
+
 
         //Ajustamos el eje y
         YAxis ejeY = lengthGraph.getAxisLeft();
@@ -158,6 +171,18 @@ public class Graph extends AppCompatActivity {
         lengthGraph.getAxisRight().setEnabled(false);//Asi no se ve el eje de la derecha
 
         lengthGraph.invalidate();
+    }
+
+    private void ajustaLeyenda(){
+        Legend leyenda = lengthGraph.getLegend();
+        leyenda.setEnabled(false);
+
+        Description d = lengthGraph.getDescription();
+        d.setText("Edad [años]");
+
+        lengthGraph.setPinchZoom(true);
+        lengthGraph.invalidate();
+
     }
 
     private void dibujaDato(){
@@ -185,7 +210,7 @@ public class Graph extends AppCompatActivity {
         for(int i = 0; i<edad.length; i++){
             entriesP50.add(new Entry((float)edad[i], (float)p50[i]));
         }
-        lineaP50 = new LineDataSet(entriesP50, "Perc. 50");
+        lineaP50 = new LineDataSet(entriesP50, "P. 50");
         lineaP50.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP50.setColor(ColorTemplate.rgb("FF9800"));
         lineaP50.setDrawCircles(false);
@@ -203,7 +228,7 @@ public class Graph extends AppCompatActivity {
         }
         //getResources().getColor(R.color.red);
 
-        lineaP97 = new LineDataSet(entriesP97, "Perc. 97");
+        lineaP97 = new LineDataSet(entriesP97, "P. 97");
         lineaP97.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP97.setColor(ColorTemplate.rgb("FF9800"));
         lineaP97.setDrawCircles(false);
@@ -224,7 +249,7 @@ public class Graph extends AppCompatActivity {
 
             entriesP03.add(new Entry((float)edad[i], (float)perc));
         }
-        lineaP03 = new LineDataSet(entriesP03, "Perc. 3");
+        lineaP03 = new LineDataSet(entriesP03, "P 3");
         lineaP03.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP03.setColor(ColorTemplate.rgb("FF9800"));
         lineaP03.setDrawCircles(false);
@@ -245,7 +270,7 @@ public class Graph extends AppCompatActivity {
 
             entriesP10.add(new Entry((float)edad[i], (float)perc));
         }
-        lineaP10 = new LineDataSet(entriesP10, "Perc. 10");
+        lineaP10 = new LineDataSet(entriesP10, "P 10");
         lineaP10.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP10.setColor(ColorTemplate.rgb("3b83bd"));
         lineaP10.setDrawCircles(false);
@@ -267,7 +292,7 @@ public class Graph extends AppCompatActivity {
 
             entriesP25.add(new Entry((float)edad[i], (float)perc));
         }
-        lineaP25 = new LineDataSet(entriesP25, "Perc. 25");
+        lineaP25 = new LineDataSet(entriesP25, "P 25");
         lineaP25.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP25.setColor(ColorTemplate.rgb("3b83bd"));
         lineaP25.setDrawCircles(false);
@@ -290,7 +315,7 @@ public class Graph extends AppCompatActivity {
 
             entriesP75.add(new Entry((float)edad[i], (float)perc));
         }
-        lineaP75 = new LineDataSet(entriesP75, "Perc. 75");
+        lineaP75 = new LineDataSet(entriesP75, "P 75");
         lineaP75.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP75.setColor(ColorTemplate.rgb("3b83bd"));
         lineaP75.setDrawCircles(false);
@@ -313,7 +338,7 @@ public class Graph extends AppCompatActivity {
 
             entriesP90.add(new Entry((float)edad[i], (float)perc));
         }
-        lineaP90 = new LineDataSet(entriesP90, "Perc 90");
+        lineaP90 = new LineDataSet(entriesP90, "P 90");
         lineaP90.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP90.setColor(ColorTemplate.rgb("3b83bd"));
         lineaP90.setDrawCircles(false);
