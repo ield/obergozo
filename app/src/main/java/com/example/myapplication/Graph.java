@@ -130,9 +130,9 @@ public class Graph extends AppCompatActivity {
          * Ademas habra que borrar este dato falso creao para ahorrar tiempo
          */
 
-        double[] medidasTest = {74, 8.8, 46};
-        dato.setMedidas(medidasTest);
-        dato.setAnos(1);
+//        double[] medidasTest = {74, 8.8, 46};
+//        dato.setMedidas(medidasTest);
+//        dato.setAnos(1);
         //Si se recibe un dato se procede a pintarlo
         dibujaDato();
         dibujaPercentiles();
