@@ -9,35 +9,15 @@
     tools:showIn="@layout/activity_graph">
 
     <TextView
-        android:id="@+id/meses"
+
+        android:id="@+id/textTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:text="Meses a mostrar: "
+        android:layout_marginTop="10dp"
+        android:text="Longitud Chicos"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/mesesText"
-        android:layout_width="62dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Meses"
-        app:layout_constraintStart_toEndOf="@+id/meses"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/bOk"
-        android:layout_width="74dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="OK"
-        app:layout_constraintStart_toEndOf="@+id/mesesText"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
