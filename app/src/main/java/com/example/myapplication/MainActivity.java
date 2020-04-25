@@ -281,8 +281,9 @@ public class MainActivity extends AppCompatActivity {
         int[] nac = convierteFechaArray(nacimiento);
         double anos = cuentaAnos(hoy, nac);
         d.setYears(anos);
-        CalculadoraLongitudChicas c1 = new CalculadoraLongitudChicas(anos, Double.parseDouble(longitudText.getText().toString()));
-        return "El percentil de longitud es: "+Math.round(c1.getPercentil()*100.0);
+
+        Calculator c1 =  new Calculator(anos, Double.parseDouble(longitudText.getText().toString()), getGender(), 0);
+        return "El percentil de longitud es: "+Math.round(c1.getPerc()*100.0);
 
     }
     public String calculaPesoChica(){
@@ -291,8 +292,8 @@ public class MainActivity extends AppCompatActivity {
         int[] nac = convierteFechaArray(nacimiento);
         double anos = cuentaAnos(hoy, nac);
 
-        CalculadoraPesoChicas c1 = new CalculadoraPesoChicas(anos, Double.parseDouble(pesoText.getText().toString()));
-        return "El percentil de peso es: "+Math.round(c1.getPercentil()*100.0);
+        Calculator c1 =  new Calculator(anos, Double.parseDouble(pesoText.getText().toString()), getGender(), 1);
+        return "El percentil de peso es: "+Math.round(c1.getPerc()*100.0);
 
     }
     public String calculaPerimetroCranealChica(){
@@ -327,8 +328,8 @@ public class MainActivity extends AppCompatActivity {
         double anos = cuentaAnos(hoy, nac);
         d.setYears(anos);
 
-        CalculadoraLongitudChicos c1 = new CalculadoraLongitudChicos(anos, Double.parseDouble(longitudText.getText().toString()));
-        return "El percentil de longitud es: "+Math.round(c1.getPercentil()*100.0);
+        Calculator c1 =  new Calculator(anos, Double.parseDouble(longitudText.getText().toString()), getGender(), 0);
+        return "El percentil de longitud es: "+Math.round(c1.getPerc()*100.0);
 
     }
     public String calculaPesoChico(){
@@ -337,8 +338,8 @@ public class MainActivity extends AppCompatActivity {
         int[] nac = convierteFechaArray(nacimiento);
         double anos = cuentaAnos(hoy, nac);
 
-        CalculadoraPesoChicos c1 = new CalculadoraPesoChicos(anos, Double.parseDouble(pesoText.getText().toString()));
-        return "El percentil de peso es: "+Math.round(c1.getPercentil()*100.0);
+        Calculator c1 =  new Calculator(anos, Double.parseDouble(pesoText.getText().toString()), getGender(), 1);
+        return "El percentil de peso es: "+Math.round(c1.getPerc()*100.0);
 
     }
     public String calculaPerimetroCranealChico(){
