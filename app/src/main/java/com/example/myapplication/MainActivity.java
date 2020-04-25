@@ -160,20 +160,27 @@ public class MainActivity extends AppCompatActivity {
 
 
                 else {
-                    if (chica.isChecked()) {
-                        ResLongitud.setText(calculaLongitudChica());
-                        ResPeso.setText(calculaPesoChica());
-                        ResPerimetroCraneal.setText(calculaPerimetroCranealChica());
-                        ResIMC.setText(calculaIMCChica());
-                    } else if (chico.isChecked()) {
-                        ResLongitud.setText(calculaLongitudChico());
-                        ResPeso.setText(calculaPesoChico());
-                        ResPerimetroCraneal.setText(calculaPerimetroCranealChico());
-                        ResIMC.setText(calculaIMCChico());
-                    }
+                    //Lo primero se pasan las medidas, porque siempre se va a pasar todo
                     medidas[0] = Double.parseDouble(longitudText.getText().toString());
                     medidas[1] = Double.parseDouble(pesoText.getText().toString());
                     medidas[2] = Double.parseDouble(perCranealText.getText().toString());
+
+                    double age = getAge();
+
+                    Calculator c1 =  new Calculator(age, medidas, getGender());
+                    int[] percentiles = c1.getPerc();
+
+                    ResLongitud.setText("El percentil de longitud es: "+percentiles[0]);
+                    ResPeso.setText("El percentil de peso es: "+percentiles[1]);
+                    ResPerimetroCraneal.setText("El percentil de perímetro craneal es: "+percentiles[2]);
+
+                    if (chica.isChecked()) {
+                        ResIMC.setText(calculaIMCChica());
+                    } else if (chico.isChecked()) {
+                        ResIMC.setText(calculaIMCChico());
+                    }
+
+                    d.setYears(age);
                     d.setMeasures(medidas);
                 }
             }
@@ -266,8 +273,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     public int getGender(){
         int gender;
         if(chico.isChecked()) gender = 0;
@@ -275,92 +280,24 @@ public class MainActivity extends AppCompatActivity {
         return gender;
     }
 
-    public String calculaLongitudChica(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
-        d.setYears(anos);
+    
 
-        Calculator c1 =  new Calculator(anos, Double.parseDouble(longitudText.getText().toString()), getGender(), 0);
-        return "El percentil de longitud es: "+Math.round(c1.getPerc()*100.0);
-
-    }
-    public String calculaPesoChica(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
-
-        Calculator c1 =  new Calculator(anos, Double.parseDouble(pesoText.getText().toString()), getGender(), 1);
-        return "El percentil de peso es: "+Math.round(c1.getPerc()*100.0);
-
-    }
-    public String calculaPerimetroCranealChica(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
-
-        if(anos>2.0 || perCranealText.getText() + "" == "") return "No se ha podido calcular el perímetro craneal";
-
-        Calculator c1 = new Calculator(anos, Double.parseDouble(perCranealText.getText().toString()), getGender(), 2);
-        return "El percentil de perímetro craneal es: "+Math.round(c1.getPerc()*100.0);
-
-    }
     public String calculaIMCChica(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
+        double age = getAge();
 
-        CalculadoraIMCChicas c1 = new CalculadoraIMCChicas(anos, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
+        CalculadoraIMCChicas c1 = new CalculadoraIMCChicas(age, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
         d.setIMC(c1.getMedida());
 
         return "El percentil de IMC es: "+Math.round(c1.getPercentil()*100.0);
 
     }
 
-    public String calculaLongitudChico(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
-        d.setYears(anos);
-
-        Calculator c1 =  new Calculator(anos, Double.parseDouble(longitudText.getText().toString()), getGender(), 0);
-        return "El percentil de longitud es: "+Math.round(c1.getPerc()*100.0);
-
-    }
-    public String calculaPesoChico(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
-
-        Calculator c1 =  new Calculator(anos, Double.parseDouble(pesoText.getText().toString()), getGender(), 1);
-        return "El percentil de peso es: "+Math.round(c1.getPerc()*100.0);
-
-    }
-    public String calculaPerimetroCranealChico(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
-
-        if(anos>2.0 || perCranealText.getText() + "" == "") return "No se ha podido calcular el perímetro craneal";
-
-        Calculator c1 = new Calculator(anos, Double.parseDouble(perCranealText.getText().toString()), getGender(), 2);
-        return "El percentil de perímetro craneal es: "+Math.round(c1.getPerc()*100.0);
-    }
     public String calculaIMCChico(){
-        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
-        String nacimiento = dateText.getText().toString();
-        int[] nac = convierteFechaArray(nacimiento);
-        double anos = cuentaAnos(hoy, nac);
+
+        double age = getAge();
 
 
-        CalculadoraIMCChicos c1 = new CalculadoraIMCChicos(anos, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
+        CalculadoraIMCChicos c1 = new CalculadoraIMCChicos(age, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
         d.setIMC(c1.getMedida());
         return "El percentil de IMC es: "+Math.round(c1.getPercentil()*100.0);
 
@@ -383,6 +320,14 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
 
+    }
+
+    public double getAge(){
+        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
+        String nacimiento = dateText.getText().toString();
+        int[] nac = convierteFechaArray(nacimiento);
+        double age = countAge(hoy, nac);
+        return age;
     }
 
     public int[] convierteFechaArray(String s){
@@ -408,28 +353,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public double cuentaAnos(int[] today, int[] nacimiento){
-        double anos = 0.0;
+    public double countAge(int[] today, int[] nacimiento){
+        double age = 0.0;
 
 
         //Ajustamos los dias
-        double diasAno = 1.0/365.0;
+        double daysYear = 1.0/365.0;
 
-        if(nacimiento[2] % 400 == 0 || (nacimiento[2] % 4 == 0 && nacimiento[2] % 100 != 0)) diasAno = 1.0/366.0;
+        if(nacimiento[2] % 400 == 0 || (nacimiento[2] % 4 == 0 && nacimiento[2] % 100 != 0)) daysYear = 1.0/366.0;
 
         while(true){
             System.out.println(nacimiento[0]);
             if(today[0] == nacimiento[0]) break;
 
             nacimiento[0]++;
-            anos = anos + diasAno;
+            age = age + daysYear;
 
-            if(nacimiento[0] > 28 && nacimiento[1] == 2 && diasAno == 1/365){//Si es 29/02 en un ano no bisiesto
+            if(nacimiento[0] > 28 && nacimiento[1] == 2 && daysYear == 1/365){//Si es 29/02 en un ano no bisiesto
                 nacimiento[0] = 1;
                 nacimiento[1]++;
                 continue;
             }
-            else if(nacimiento[0] > 29 && nacimiento[1] == 2 && diasAno == 1/366){//Si es 30/02 en un ano bisiesto
+            else if(nacimiento[0] > 29 && nacimiento[1] == 2 && daysYear == 1/366){//Si es 30/02 en un ano bisiesto
                 nacimiento[0] = 1;
                 nacimiento[1]++;
                 continue;
@@ -445,8 +390,8 @@ public class MainActivity extends AppCompatActivity {
                 if(nacimiento[1] > 12){
                     nacimiento[1] = 1;
                     nacimiento[2]++;
-                    if(nacimiento[2] % 400 == 0 || (nacimiento[2] % 4 == 0 && nacimiento[2] % 100 != 0)) diasAno = 1.0/366.0;
-                    else diasAno = 1.0/365.0;
+                    if(nacimiento[2] % 400 == 0 || (nacimiento[2] % 4 == 0 && nacimiento[2] % 100 != 0)) daysYear = 1.0/366.0;
+                    else daysYear = 1.0/365.0;
                 }
                 continue;
             }
@@ -455,32 +400,32 @@ public class MainActivity extends AppCompatActivity {
 
         //Ajustamos los meses
         while(true){
-            System.out.println(anos);
+            System.out.println(age);
             if(today [1] == nacimiento[1]) break;
 
-            if(nacimiento[1] == 2 && diasAno == 1/365){
-                anos += 28.0*diasAno;
+            if(nacimiento[1] == 2 && daysYear == 1/365){
+                age += 28.0*daysYear;
                 nacimiento[1]++;
                 continue;
             }
             else if(nacimiento[1] == 2){
-                anos += 29.0*diasAno;
+                age += 29.0*daysYear;
                 nacimiento[1]++;
                 continue;
             }
             else if(nacimiento[1] == 4 || nacimiento[1] == 6 || nacimiento[1] == 9 || nacimiento[1] == 11){
-                anos += 30.0*diasAno;
+                age += 30.0*daysYear;
                 nacimiento[1]++;
                 continue;
             }
             else{
-                anos += 31.0*diasAno;
+                age += 31.0*daysYear;
                 nacimiento[1]++;
                 if(nacimiento[1] == 12){
                     nacimiento[2]++;
                     nacimiento[1] = 1;
-                    if(nacimiento[2] % 400 == 0 || (nacimiento[2] % 4 == 0 && nacimiento[2] % 100 != 0)) diasAno = 1.0/366.0;
-                    else diasAno = 1.0/365.0;
+                    if(nacimiento[2] % 400 == 0 || (nacimiento[2] % 4 == 0 && nacimiento[2] % 100 != 0)) daysYear = 1.0/366.0;
+                    else daysYear = 1.0/365.0;
                 }
             }
 
@@ -488,10 +433,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         while(true){
-            System.out.println(anos);
-            if(today[2] == nacimiento[2]) return anos;
+            System.out.println(age);
+            if(today[2] == nacimiento[2]) return age;
             nacimiento[2]++;
-            anos++;
+            age++;
         }
 
 

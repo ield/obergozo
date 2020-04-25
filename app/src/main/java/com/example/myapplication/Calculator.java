@@ -1,30 +1,47 @@
 package com.example.myapplication;
 
 public class Calculator {
-    private double[] age = {0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18};
+    private double[] ageArray = {0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18};
 
-    private double[][][] allP50 = new double[2][4][age.length];
-    private double[][][] allP97 = new double[2][4][age.length];
+    private double[][][] allP50 = new double[2][4][ageArray.length];
+    private double[][][] allP97 = new double[2][4][ageArray.length];
 
-    private int gen, mag;
-    //private double measure;
+    private double[] measures;
+    private double[] perc;//Los percentiles que se devuelven
 
-    double perc;
+    private int gen;
+    private double age;
 
-    public Calculator(double age, double measure, int gender, int magnitude){
+    private int interval;
+    private double fraction;//The fraction of the year to approximate linearly
 
+
+    public Calculator(double age, double[] measures, int gender){
         generateData();
         this.gen = gender;
-        this.mag = magnitude;
+        this.age = age;
+        this.measures = measures;
 
-        int interval = interval(age);
+        this.perc = new double[4];
 
-        double fraction = fraction(interval, age);
-        double p50 = getP50(interval, fraction);
-        double p97 = getP97(interval, fraction);
+        this.interval = interval(age);
+        this.fraction = fraction(interval, age);
+
+        for(int i = 0; i<3; i++){
+            perc[i] = calcPerc(i);
+        }
+
+    }
+
+    private double calcPerc(int mag){
+        double measure = measures[mag];
+
+        double p50 = getP50(interval, fraction, mag);
+        double p97 = getP97(interval, fraction, mag);
         double sd = (p97-p50)/1.88;
         double z = (measure-p50)/sd;
-        perc = (CNDF(z));
+        return (CNDF(z));
+
     }
 
     private void generateData(){
@@ -100,15 +117,22 @@ public class Calculator {
 
 
 
-    public double getPerc(){return this.perc;}
+    public int[] getPerc(){
+        int[] percInt = new int[perc.length];
+
+        for(int i = 0; i<perc.length; i++){
+            percInt[i] = (int)Math.round(perc[i]*100);
+        }
+        return percInt;
+    }
 
     /*
     Este metodo devuelve la posicion en el array age en donde se encuentra la age
      */
     private int interval(double age){
         int i;
-        for(i = 0; i<this.age.length; i++){
-            if(age<this.age[i]) return (i-1);
+        for(i = 0; i<this.ageArray.length; i++){
+            if(age<this.ageArray[i]) return (i-1);
 
         }
         return i;
@@ -121,14 +145,14 @@ public class Calculator {
     para calcular el p50 y p97 proporcionales
      */
     private double fraction(int i, double age){
-        return (age-this.age[i])/(this.age[i+1]-this.age[i]);
+        return (age-this.ageArray[i])/(this.ageArray[i+1]-this.ageArray[i]);
     }
 
     /*
     Calcula el p50 proporcional a la fraction fr a partir de
     la measure que esta en la posicion i
      */
-    private double getP50(int i, double fr){
+    private double getP50(int i, double fr, int mag){
         return fr*(allP50[gen][mag][i+1]-allP50[gen][mag][i])+allP50[gen][mag][i];
     }
 
@@ -136,7 +160,7 @@ public class Calculator {
     Calcula el p97 proporcional a la fraction fr a partir de
     la measure que esta en la posicion i
      */
-    private double getP97(int i, double fr){
+    private double getP97(int i, double fr, int mag){
         return fr*(allP97[gen][mag][i+1]-allP97[gen][mag][i])+allP97[gen][mag][i];
     }
 
