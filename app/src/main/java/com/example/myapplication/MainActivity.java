@@ -304,8 +304,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(anos>2.0 || perCranealText.getText() + "" == "") return "No se ha podido calcular el perímetro craneal";
 
-        CalculadoraPerimetroCranealChicas c1 = new CalculadoraPerimetroCranealChicas(anos, Double.parseDouble(perCranealText.getText().toString()));
-        return "El percentil de perímetro craneal es: "+Math.round(c1.getPercentil()*100.0);
+        Calculator c1 = new Calculator(anos, Double.parseDouble(perCranealText.getText().toString()), getGender(), 2);
+        return "El percentil de perímetro craneal es: "+Math.round(c1.getPerc()*100.0);
 
     }
     public String calculaIMCChica(){
@@ -350,9 +350,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(anos>2.0 || perCranealText.getText() + "" == "") return "No se ha podido calcular el perímetro craneal";
 
-        CalculadoraPerimetroCranealChicos c1 = new CalculadoraPerimetroCranealChicos(anos, Double.parseDouble(perCranealText.getText().toString()));
-        return "El percentil de perímetro craneal es: "+Math.round(c1.getPercentil()*100.0);
-
+        Calculator c1 = new Calculator(anos, Double.parseDouble(perCranealText.getText().toString()), getGender(), 2);
+        return "El percentil de perímetro craneal es: "+Math.round(c1.getPerc()*100.0);
     }
     public String calculaIMCChico(){
         int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};

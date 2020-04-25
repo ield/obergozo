@@ -7,6 +7,7 @@ public class Calculator {
     private double[][][] allP97 = new double[2][4][age.length];
 
     private int gen, mag;
+    //private double measure;
 
     double perc;
 
