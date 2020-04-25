@@ -1,3 +1,29 @@
+//Engineer: ield
+//
+
+/**
+ Para hacer algo que se pueda mandar de una clase a otras:
+ #1: implements Serializable en la clase del objeto que se quiere enviar
+ #2: Para pasar de una clase a otra se hace lo siguiente
+
+ Intent i = new Intent(MainActivity.this, Graph.class);
+ Objeto o = new Objeto();
+
+ Bundle bundle = new Bundle();
+ bundle.putSerializable("objeto", o); //donde "objeto" es la clave y o el objeto que se va a pasar
+ i.putExtras(bundle);
+
+ startActivity(i);
+ #3: En la clase de la actividad nueva se hace lo siguiente
+
+ Bundle receivedObj = getIntent().getExtras();
+ Objeto o  = null;
+
+ if(receivedObj!=null){
+ o = (Objeto)receivedObj.getSerializable("objeto");
+ }
+ */
+
 package com.example.myapplication;
 
 import android.os.Bundle;
@@ -7,14 +33,12 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,33 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.round;
-
-/**
- * Percenciles = p
- */
-
-/**
-Para hacer algo que se pueda mandar de una clase a otras:
-#1: implements Serializable en la clase del objeto que se quiere enviar
-#2: Para pasar de una clase a otra se hace lo siguiente
-
-    Intent i = new Intent(MainActivity.this, Graph.class);
-    Objeto o = new Objeto();
-
-    Bundle bundle = new Bundle();
-    bundle.putSerializable("objeto", o); //donde "objeto" es la clave y o el objeto que se va a pasar
-    i.putExtras(bundle);
-
-    startActivity(i);
-#3: En la clase de la actividad nueva se hace lo siguiente
-
-    Bundle objetoRecibido = getIntent().getExtras();
-    Objeto o  = null;
-
-    if(objetoRecibido!=null){
-        o = (Objeto)objetoRecibido.getSerializable("objeto");
-    }
-*/
 
 /**
  * Para poner las graficas bien
@@ -83,91 +80,111 @@ public class Graph extends AppCompatActivity {
 
     private Dato dato = null;//Este es el dato que se recibe de las medidas tomadas por la app
     private int gen; //Gender, used to select in the 3d array
-    private int mag; //Magnitude used to select what is measurable.
+    private int mag; //Magnitude used to select what measure is to be plotted
+
     /*
-     * Esto se tiene que acabar, hay que hacer un objeto que contenga todos los datos. Esto si no no se sostine.
+    Two different age arrays are created. This is because when it is plotted the cranial perimeter,
+    there is only data until 2 years old. When it is worked with cranial, it is used the short
+    array. Otherwise, it is used the long one.
+    Age will be equal to the ageLong or ageShort depending on the magnitude.
      */
-
-
     private double[] ageLong = {0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18};
     private double[] ageShort = {0, 0.25, 0.5, 0.75, 1, 1.5, 2};
-
     private double[] age;
 
 
+    /*
+    All the data (length, weight, cranial and IMC) is stored in these 3D arrays. The positioning is:
+    array[gender][magnitude][value] where
+        gender = [male female]
+        magnitude = [length, weight, cranial, IMC]
+        value: ordered with the age
+     */
     private double[][][] allP50 = new double[2][4][ageLong.length];
     private double[][][] allP97 = new double[2][4][ageLong.length];
 
+
+    /*
+    In these arrays will be stored the maxima and minima of each magnitude for deciding the limits
+    when plotting the axis
+     */
     private double[]maxY = new double[4];
     private double[]minY = new double[4];
 
-    private int limSupAge;
 
+    //The title will be magnitude + gender (ej: longitud chico)
     private String[] titleMag = {"Longitud", "Peso", "Perímetro Craneal", "IMC"};
     private String[] titleGen = {"Chico", "Chica"};
-    private List<ILineDataSet> todasMedidas = new ArrayList<ILineDataSet>();
-
-    private LineChart lengthGraph;
-
-
     private TextView textTitulo;
 
+    /*
+    Here it is stored all the data needed for plotting. The instructions to do so are obtained from
+    com.github.mikephil.charting
+     */
+    private List<ILineDataSet> todasMedidas = new ArrayList<ILineDataSet>();
+    private LineChart lengthGraph;
 
     @Override
+    /*What to do when the activity is created:
+     * #1.  The android elements are initialized: the graph and the textView of the title
+     * #2.  It is obtained the datum to be plotted: its measures, the gender and the magitude
+     * #3.  Depending on the magnitude it is selected whether to use ageLong or short. If it is
+     *      cranial, it will be used age short.
+     * #4.  There are two 3D arrays generated with all the data allP50 and allP97. They will be used
+     *      to plot the p50 and p97 as well as to obtain the other percentiles.
+     * #5.  It is configured the element (lineData) that contains all the data to be plotted:
+     *      the datum received and all the percentiles (p03, 10, 25, 50, 75, 90, 97).
+     * #6.  The graph is adjusted to the desired graph: the axis, the legend etc.
+     * #7.  The graph is plotted.
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
-        // Primero gestionamos el tema del paso de referencias entre activities
+
+        // #1
         lengthGraph = (LineChart) findViewById(R.id.lengthGraph);
         textTitulo = (TextView) findViewById(R.id.textTitulo);
 
-        Bundle objetoRecibido = getIntent().getExtras();
-        if (objetoRecibido != null) {
-            dato = (Dato) objetoRecibido.getSerializable("dato");
-            gen = (int) objetoRecibido.getSerializable("gender");
-            mag = (int) objetoRecibido.getSerializable("magnitude");
-        }
-        //if(dato == null) return;
-        /**
-         * TODO: Hay que ver que es lo que se hace si se recibe un dato null. En plan,
-         * poner un toast o algo asi. Por ahora se termina el metodo.
-         * Ademas habra que borrar este dato falso creao para ahorrar tiempo
-         */
-
-        generateData();
-
+        // #2
+        Bundle receivedObj = getIntent().getExtras();
+        dato = (Dato) receivedObj.getSerializable("dato");
+        gen = (int) receivedObj.getSerializable("gender");
+        mag = (int) receivedObj.getSerializable("magnitude");
 //        double[] medidasTest = {74, 8.8, 46};
 //        dato.setMeasures(medidasTest);
 //        dato.setYears(1);
 
-
+        // #3
         if(mag == 2){
             this.age = this.ageShort;
         }else{
             this.age = this.ageLong;
         }
 
-        //Si se recibe un dato se procede a pintarlo
+        // #4
+        generateData();
+
+        // #5
         plotDato();
-
-
-
         plotAllP();
 
-        adjustAxis();
-        adjustLegend();
+        // #6
+        adjustGraph();
 
+        // #7
         LineData lineData = new LineData(todasMedidas);
         lengthGraph.setData(lineData);
-
         lengthGraph.invalidate();
-        //lengthGraph.animateXY(2000, 2000);
 
     }
 
+    /**
+     * Generating Data: Step #4
+     * There are two 3D arrays generated with all the data of all maginitudes: allP50 and allP97.
+     * The function generateData calls the other functions that generate the data
+     * Each function just stores the data
+     */
     private void generateData(){
         generateP50boys();
         generateP50girls();
@@ -240,57 +257,14 @@ public class Graph extends AppCompatActivity {
     }
 
 
-
-
-    private void adjustAxis() {
-        //Ajustamos el eje x
-
-        XAxis ejeX = lengthGraph.getXAxis();
-
-        ejeX.setPosition(XAxis.XAxisPosition.BOTTOM);
-        ejeX.setEnabled(true);
-        ejeX.setDrawLabels(true);//Esto es solo para poner los numeros del eje
-        ejeX.setDrawAxisLine(true);
-
-        if(this.mag == 2){
-            ejeX.setAxisMaximum(2);
-        }else{
-            ejeX.setAxisMaximum(18);
-        }
-        ejeX.setAxisMinimum(0);
-
-
-        //Ajustamos el eje y
-        YAxis ejeY = lengthGraph.getAxisLeft();
-        //ejeY.setPosition(YAxis.YAxisPosition.LEFT);
-        ejeY.setDrawLabels(true);
-        ejeY.setDrawAxisLine(true);
-        ejeY.setAxisMaximum(round(maxY[mag])+5);
-        ejeY.setAxisMinimum(round(minY[mag])-5);
-
-        lengthGraph.getAxisRight().setEnabled(false);//Asi no se ve el eje de la derecha
-
-        lengthGraph.invalidate();
-
-        String title = titleMag[mag] + " " + titleGen[gen];
-
-        textTitulo.setText(title);
-    }
-
-    private void adjustLegend() {
-        Legend leyenda = lengthGraph.getLegend();
-        leyenda.setEnabled(false);
-
-        Description d = lengthGraph.getDescription();
-        d.setText("age [años]");
-
-        lengthGraph.setPinchZoom(true);
-        lengthGraph.invalidate();
-
-    }
-
-
-
+    /**
+     * Plotting Data: Step #5
+     * Plotting data consists on adding LineDataSet, which are formed by arrayList of entries.
+     * An entry has an x and a y.
+     * The datum plotted has only one x (the age) and one y (the value of the magnitude), both
+     *  contained in dato.
+     * Since it is only one datum, it is plotted as a circle. The color is set to black
+     */
     private void plotDato() {
         List<Entry> entriesMedidas = new ArrayList<Entry>();
         entriesMedidas.add(new Entry((float) dato.getYears(), (float) dato.getMeasures()[mag]));
@@ -301,9 +275,16 @@ public class Graph extends AppCompatActivity {
         todasMedidas.add(lineaMedidas);
     }
 
-
-
-
+    /**
+     * Plotting Curves: Step #5
+     * Plotting data consists on adding LineDataSet, which are formed by arrayList of entries.
+     * An entry has an x and a y.
+     * For P50 and P97 all it is done is add the values of the percentiles and the age to form
+     *  entries. Then they are plotted with different colors and line effects.
+     * For the rest of the percentiles the process is more complex. First it is calculated the
+     *  percentile value. This is done using the p50 and the p97 with the function getZ, to
+     *  calculate any percentile
+     */
     private void plotAllP() {
         plotP50();
         plotP97();
@@ -471,6 +452,62 @@ public class Graph extends AppCompatActivity {
 
         todasMedidas.add(lineaP90);
     }
+
+
+    /**
+     * Adjusting the graph: Step #5
+     * It is adjusted first the xaxis and then the y axis: the position, etc.
+     * The limits of the xaxis depend on the magnitude being measured: if it is cranial, the maximum
+     *  is 2 years. Otherwise the maximum is 18 years.
+     * The limits of the yaxis depend on the limits of the magnitude being measured. These limits
+     *  are calculated while they were going to be plotted: in plotP97 and plotP03. The limit is set
+     *  to this values +-5
+     * It is also adjusted the title of the graph
+     * The legend of the graph is set so that there is no legend and the xaxis sets to be in years.
+     * The zoom is configured. Right now, there is zoom in vertical or horizonta. Otherwise just in
+     *  diagonal (without the comments)
+     */
+    private void adjustGraph() {
+        //Ajustamos el eje x
+        XAxis ejeX = lengthGraph.getXAxis();
+        ejeX.setPosition(XAxis.XAxisPosition.BOTTOM);
+        ejeX.setEnabled(true);
+        ejeX.setDrawLabels(true);//Esto es solo para poner los numeros del eje
+        ejeX.setDrawAxisLine(true);
+        if(this.mag == 2){
+            ejeX.setAxisMaximum(2);
+        }else{
+            ejeX.setAxisMaximum(18);
+        }
+        ejeX.setAxisMinimum(0);
+
+        //Ajustamos el eje y
+        YAxis ejeY = lengthGraph.getAxisLeft();
+        //ejeY.setPosition(YAxis.YAxisPosition.LEFT);
+        ejeY.setDrawLabels(true);
+        ejeY.setDrawAxisLine(true);
+        ejeY.setAxisMaximum(round(maxY[mag])+5);
+        ejeY.setAxisMinimum(round(minY[mag])-5);
+        lengthGraph.getAxisRight().setEnabled(false);//Asi no se ve el eje de la derecha
+
+        //Adjusting the title
+        String title = titleMag[mag] + " " + titleGen[gen];
+        textTitulo.setText(title);
+
+        //Adjusting the legend
+        Legend leyenda = lengthGraph.getLegend();
+        leyenda.setEnabled(false);
+
+        Description d = lengthGraph.getDescription();
+        d.setText("edad [años]");
+
+        //Adjusting the zoom
+        //lengthGraph.setPinchZoom(true); //This is to make zoom in all directions
+
+
+        lengthGraph.invalidate();
+    }
+
 
 
     /**

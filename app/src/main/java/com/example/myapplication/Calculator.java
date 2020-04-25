@@ -3,11 +3,18 @@ package com.example.myapplication;
 public class Calculator {
     private double[] ageArray = {0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18};
 
+    /*
+    All the data (length, weight, cranial and IMC) is stored in these 3D arrays. The positioning is:
+    array[gender][magnitude][value] where
+        gender = [male female]
+        magnitude = [length, weight, cranial, IMC]
+        value: ordered with the age
+     */
     private double[][][] allP50 = new double[2][4][ageArray.length];
     private double[][][] allP97 = new double[2][4][ageArray.length];
 
-    private double[] measures;
-    private double[] perc;//Los percentiles que se devuelven
+    private double[] measures; //The measures taken
+    private double[] perc;//The percentiles that will be returned
 
     private int gen;
     private double age;
@@ -18,6 +25,16 @@ public class Calculator {
     private double fraction;//The fraction of the year to approximate linearly
 
 
+    /**
+     * Constructor
+     * Receives the age of the baby, the measures taken and the gender of the baby (0 for boy and 1
+     *  for girl
+     * To calculate all the percentiles, it is necessary to linearize the functions. For that reason
+     *  it is decided between which ages is the age and how far or near the other. That is the way
+     *  of approximating the measures for every age.
+     * If the baby is smaller than 2 years, it is calculated everything. If it is bigger it is
+     *  not calculated the cranial perimeter
+     */
     public Calculator(double age, double[] measures, int gender){
         generateData();
         this.gen = gender;
@@ -44,23 +61,13 @@ public class Calculator {
 
     }
 
-    private double calcPerc(int mag){
-        double measure;
-        if(mag != 3) {
-            measure = measures[mag];
-        }else{
-            measure = measures[1]/Math.pow(measures[0]/100, 2);
-            this.IMC = measure;
-        }
 
-        double p50 = getP50(interval, fraction, mag);
-        double p97 = getP97(interval, fraction, mag);
-        double sd = (p97-p50)/1.88;
-        double z = (measure-p50)/sd;
-        return (CNDF(z));
-
-    }
-
+    /**
+     * Generating Data
+     * There are two 3D arrays generated with all the data of all maginitudes: allP50 and allP97.
+     * The function generateData calls the other functions that generate the data
+     * Each function just stores the data
+     */
     private void generateData(){
         generateP50boys();
         generateP50girls();
@@ -132,20 +139,7 @@ public class Calculator {
         allP97[0][3] = p97_IMC;
     }
 
-
-
-    public int[] getPerc(){
-        int[] percInt = new int[perc.length];
-
-        for(int i = 0; i<perc.length; i++){
-            percInt[i] = (int)Math.round(perc[i]*100);
-        }
-        return percInt;
-    }
-
-    public double getIMC(){return this.IMC;}
-
-    /*
+    /**
     Este metodo devuelve la posicion en el array age en donde se encuentra la age
      */
     private int interval(double age){
@@ -157,7 +151,7 @@ public class Calculator {
         return i;
     }
 
-    /*
+    /**
     Este metodo devuelve la fraction en donde esta nuestra age.
     Es decir, (age-liminferior)/(limsup-liminf)
     Este dato es util porque, al ser lineal, lo usaremos despues
@@ -167,7 +161,36 @@ public class Calculator {
         return (age-this.ageArray[i])/(this.ageArray[i+1]-this.ageArray[i]);
     }
 
-    /*
+
+    /**
+     * Calculates the percentile of any measure
+     * @param mag is the magnitude to calculate the percentile. If it is the IMC, the measure is not
+     *            in the array of values. It is obtained from the length and the weight.
+     * The function calculates the value of the p50 and p90 at a given age. This value is an
+     *            approximation of the function being lineal. It is a fair approximation. With these
+     *            values it is calculated the percentile of the measure
+     * @return
+     */
+    private double calcPerc(int mag){
+        double measure;
+
+        if(mag != 3) {
+            measure = measures[mag];
+        }else{
+            //How to obtain the IMC
+            measure = measures[1]/Math.pow(measures[0]/100, 2);
+            this.IMC = measure;
+        }
+
+        double p50 = getP50(interval, fraction, mag);
+        double p97 = getP97(interval, fraction, mag);
+        double sd = (p97-p50)/1.88;
+        double z = (measure-p50)/sd;
+        return (CNDF(z));
+
+    }
+
+    /**
     Calcula el p50 proporcional a la fraction fr a partir de
     la measure que esta en la posicion i
      */
@@ -175,7 +198,7 @@ public class Calculator {
         return fr*(allP50[gen][mag][i+1]-allP50[gen][mag][i])+allP50[gen][mag][i];
     }
 
-    /*
+    /**
     Calcula el p97 proporcional a la fraction fr a partir de
     la measure que esta en la posicion i
      */
@@ -183,8 +206,7 @@ public class Calculator {
         return fr*(allP97[gen][mag][i+1]-allP97[gen][mag][i])+allP97[gen][mag][i];
     }
 
-
-    /*
+    /**
     Devuelve el valor de la tabla de distribucion de probabilidad normal
     Tengo que meter z = (x-media)/ds
     Source: https://www.codeproject.com/Messages/2622967/Re-NORMSDIST-function.aspx
@@ -201,5 +223,25 @@ public class Calculator {
 
         return (1d - neg) * y + neg * (1d - y);
     }
+
+    /**
+     * Returns the percentiles
+     * @return all the percentiles as an array of int
+     */
+    public int[] getPerc(){
+        int[] percInt = new int[perc.length];
+
+        for(int i = 0; i<perc.length; i++){
+            percInt[i] = (int)Math.round(perc[i]*100);
+        }
+        return percInt;
+    }
+
+    /**
+     * Returns the IMC. It is useful for the plot.
+     * @return the imc
+     */
+    public double getIMC(){return this.IMC;}
+
 }
 
