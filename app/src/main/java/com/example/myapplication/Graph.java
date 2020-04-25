@@ -133,12 +133,14 @@ public class Graph extends AppCompatActivity {
 
         generateData();
 
-        double[] medidasTest = {74, 8.8, 46};
-        dato.setMeasures(medidasTest);
-        dato.setYears(1);
+//        double[] medidasTest = {74, 8.8, 46};
+//        dato.setMeasures(medidasTest);
+//        dato.setYears(1);
+
 
         //Si se recibe un dato se procede a pintarlo
         plotDato();
+
         plotAllP();
 
         adjustAxis();
@@ -272,7 +274,7 @@ public class Graph extends AppCompatActivity {
 
     private void plotDato() {
         List<Entry> entriesMedidas = new ArrayList<Entry>();
-        entriesMedidas.add(new Entry((float) dato.getYears(), (float) dato.getMeasures()[0]));
+        entriesMedidas.add(new Entry((float) dato.getYears(), (float) dato.getMeasures()[mag]));
         LineDataSet lineaMedidas = new LineDataSet(entriesMedidas, "Medida");
         lineaMedidas.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaMedidas.setColor(ColorTemplate.rgb("0A0A0A"));

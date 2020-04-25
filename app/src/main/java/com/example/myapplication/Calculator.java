@@ -12,6 +12,8 @@ public class Calculator {
     private int gen;
     private double age;
 
+    private double IMC;
+
     private int interval;
     private double fraction;//The fraction of the year to approximate linearly
 
@@ -48,6 +50,7 @@ public class Calculator {
             measure = measures[mag];
         }else{
             measure = measures[1]/Math.pow(measures[0]/100, 2);
+            this.IMC = measure;
         }
 
         double p50 = getP50(interval, fraction, mag);
@@ -139,6 +142,8 @@ public class Calculator {
         }
         return percInt;
     }
+
+    public double getIMC(){return this.IMC;}
 
     /*
     Este metodo devuelve la posicion en el array age en donde se encuentra la age

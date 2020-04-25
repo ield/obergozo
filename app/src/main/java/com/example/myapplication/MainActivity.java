@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
                     d.setYears(age);
                     d.setMeasures(medidas);
+                    d.setIMC(c1.getIMC());
                 }
             }
 
