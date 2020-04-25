@@ -25,6 +25,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.round;
+
 /**
  * Percenciles = p
  */
@@ -88,12 +90,17 @@ public class Graph extends AppCompatActivity {
 
 
     private double[] age = {0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18};
-    private double[] p50 = {50.06, 60.44, 66.81, 71.1, 75.08, 81.33, 86.68, 90.77, 94.62, 98.41, 102.11, 105.69, 109.11, 113.2, 115.4, 117.33, 120.4, 123.38, 126.18, 129.01, 131.71, 134.18, 136.53, 139.05, 141.53, 143.66, 146.23, 148.96, 152.15, 156.05, 160.92, 165.08, 168.21, 170.18, 171.4, 172.28, 173.23, 173.83, 174.1};
-    private double[] p97 = {53.64, 64.4, 70.92, 75.68, 80.01, 86.57, 92.12, 98.62, 102.82, 107.07, 111.28, 115.41, 119.4, 124, 126.18, 129.21, 132.73, 136.13, 139.3, 142.47, 145.44, 148.16, 150.73, 153.43, 156.08, 158.36, 161.07, 163.93, 167.24, 171.25, 176.21, 180.45, 183.64, 185.61, 186.78, 187.53, 188.24, 188.46, 188.46};
+    //private double[] p50 = {50.06, 60.44, 66.81, 71.1, 75.08, 81.33, 86.68, 90.77, 94.62, 98.41, 102.11, 105.69, 109.11, 113.2, 115.4, 117.33, 120.4, 123.38, 126.18, 129.01, 131.71, 134.18, 136.53, 139.05, 141.53, 143.66, 146.23, 148.96, 152.15, 156.05, 160.92, 165.08, 168.21, 170.18, 171.4, 172.28, 173.23, 173.83, 174.1};
+    //private double[] p97 = {53.64, 64.4, 70.92, 75.68, 80.01, 86.57, 92.12, 98.62, 102.82, 107.07, 111.28, 115.41, 119.4, 124, 126.18, 129.21, 132.73, 136.13, 139.3, 142.47, 145.44, 148.16, 150.73, 153.43, 156.08, 158.36, 161.07, 163.93, 167.24, 171.25, 176.21, 180.45, 183.64, 185.61, 186.78, 187.53, 188.24, 188.46, 188.46};
 
     private double[][][] allP50 = new double[2][4][age.length];
     private double[][][] allP97 = new double[2][4][age.length];
 
+    private double[]maxY = new double[4];
+    private double[]minY = new double[4];
+
+    private String[] titleMag = {"Longitud", "Peso", "Perímetro Craneal", "IMC"};
+    private String[] titleGen = {"Chico", "Chica"};
     private List<ILineDataSet> todasMedidas = new ArrayList<ILineDataSet>();
 
     private LineChart lengthGraph;
@@ -157,10 +164,10 @@ public class Graph extends AppCompatActivity {
     private void generateP50girls(){
 
         //Longitud chicas
-        double[] p50_length = {50.06, 60.44, 66.81, 71.1, 75.08, 81.33, 86.68, 90.77, 94.62, 98.41, 102.11, 105.69, 109.11, 113.2, 115.4, 117.33, 120.4, 123.38, 126.18, 129.01, 131.71, 134.18, 136.53, 139.05, 141.53, 143.66, 146.23, 148.96, 152.15, 156.05, 160.92, 165.08, 168.21, 170.18, 171.4, 172.28, 173.23, 173.83, 174.1};
+        double[] p50_length = {49.34, 59.18, 65.33, 69.52, 73.55, 80.05, 85.4, 89.87, 93.93, 97.73, 101.33, 104.76, 108.07, 111.28, 114.41, 117.5, 120.54, 123.54, 126.52, 129.48, 132.4, 135.28, 138.11, 140.4, 142.98, 146.09, 149.03, 151.73, 154.14, 156.21, 157.88, 159.15, 160.01, 160.5, 160.68, 160.7, 160.72, 160.75, 160.78};
         allP50[1][0] = p50_length;
         //weigh chicas
-        double[] p50_weigh = {3.34, 5.79, 7.44, 8.63, 9.6, 10.94, 12.15, 13.3, 14.1, 14.89, 15.59, 16.48, 17.55, 18.77, 20.14, 21.65, 23.27, 24.99, 26.8, 28.68, 30.62, 62.60, 34.61, 36.63, 38.65, 40.66, 42.63, 44.56, 46.43, 48.22, 49.92, 51.52, 53, 54.34, 55.54, 56.57, 57.43, 58.09, 58.55};
+        double[] p50_weigh = {3.34, 5.79, 7.44, 8.63, 9.6, 10.94, 12.15, 13.3, 14.1, 14.89, 15.59, 16.48, 17.55, 18.77, 20.14, 21.65, 23.27, 24.99, 26.8, 28.68, 30.62, 32.60, 34.61, 36.63, 38.65, 40.66, 42.63, 44.56, 46.43, 48.22, 49.92, 51.52, 53, 54.34, 55.54, 56.57, 57.43, 58.09, 58.55};
         allP50[1][1] = p50_weigh;
         //PerimetroCraneal chicas
         double[] p50_cranial = {34.18, 40.1, 42.83, 44.69, 45.98, 47.31, 48.25};
@@ -176,7 +183,7 @@ public class Graph extends AppCompatActivity {
         double[] p50_longitud = {50.06, 60.44, 66.81, 71.1, 75.08, 81.33, 86.68, 90.77, 94.62, 98.41, 102.11, 105.69, 109.11, 113.2, 115.4, 117.33, 120.4, 123.38, 126.18, 129.01, 131.71, 134.18, 136.53, 139.05, 141.53, 143.66, 146.23, 148.96, 152.15, 156.05, 160.92, 165.08, 168.21, 170.18, 171.4, 172.28, 173.23, 173.83, 174.1};
         allP50[0][0] = p50_longitud;
         //weigh chicos
-        double[] p50_weigh = {3.47, 6.26, 8.02, 9.24, 10.15, 11.45, 12.7, 13.84, 14.84, 15.92, 16.9, 17.95, 19.06, 20.24, 21.4, 22.6, 23.26, 24.39, 25.64, 27.04, 28.6, 30.32, 32.22, 34.28, 36.51, 38.88, 41.38, 43.99, 46.68, 49.41, 52.15, 54.86, 87.49, 59.98, 62.27, 64.31, 66.03, 67.35, 68.19};
+        double[] p50_weigh = {3.47, 6.26, 8.02, 9.24, 10.15, 11.45, 12.7, 13.84, 14.84, 15.92, 16.9, 17.95, 19.06, 20.24, 21.4, 22.6, 23.26, 24.39, 25.64, 27.04, 28.6, 30.32, 32.22, 34.28, 36.51, 38.88, 41.38, 43.99, 46.68, 49.41, 52.15, 54.86, 57.49, 59.98, 62.27, 64.31, 66.03, 67.35, 68.19};
         allP50[0][1] = p50_weigh;
         //PerimetroCraneal chicos
         double[] p50_cranial = {34.84, 41.2, 44.15, 46.02, 47.31, 48.7, 49.59};
@@ -239,11 +246,16 @@ public class Graph extends AppCompatActivity {
         //ejeY.setPosition(YAxis.YAxisPosition.LEFT);
         ejeY.setDrawLabels(true);
         ejeY.setDrawAxisLine(true);
-        ejeY.setAxisMaximum(190);
-        ejeY.setAxisMinimum(40);
+        ejeY.setAxisMaximum(round(maxY[mag])+5);
+        ejeY.setAxisMinimum(round(minY[mag])-5);
+
         lengthGraph.getAxisRight().setEnabled(false);//Asi no se ve el eje de la derecha
 
         lengthGraph.invalidate();
+
+        String title = titleMag[mag] + " " + titleGen[gen];
+
+        textTitulo.setText(title);
     }
 
     private void adjustLegend() {
@@ -287,7 +299,7 @@ public class Graph extends AppCompatActivity {
     private void plotP50() {
         List<Entry> entriesP50 = new ArrayList<Entry>();
         for (int i = 0; i < age.length; i++) {
-            entriesP50.add(new Entry((float) age[i], (float) p50[i]));
+            entriesP50.add(new Entry((float) age[i], (float) allP50[gen][mag][i]));
         }
         LineDataSet lineaP50 = new LineDataSet(entriesP50, "P. 50");
         lineaP50.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -303,14 +315,21 @@ public class Graph extends AppCompatActivity {
     private void plotP03() {
         List<Entry> entriesP03 = new ArrayList<Entry>();
 
+
         double z = getZ(0.03);
 
+        double yMin = 500;
+
         for (int i = 0; i < age.length; i++) {
-            double sd = (p97[i] - p50[i]) / 1.88;
-            double perc = z * sd + p50[i];
+            double sd = (allP97[gen][mag][i] - allP50[gen][mag][i]) / 1.88;
+            double perc = z * sd + allP50[gen][mag][i];
+
+            if(perc < yMin) yMin = perc;
 
             entriesP03.add(new Entry((float) age[i], (float) perc));
         }
+        minY[mag] = yMin;
+
         LineDataSet lineaP03 = new LineDataSet(entriesP03, "P 3");
         lineaP03.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineaP03.setColor(ColorTemplate.rgb("FF9800"));
@@ -323,10 +342,15 @@ public class Graph extends AppCompatActivity {
 
     private void plotP97() {
         List<Entry> entriesP97 = new ArrayList<Entry>();
+
+        double yMax = 0;
+
         for (int i = 0; i < age.length; i++) {
-            entriesP97.add(new Entry((float) age[i], (float) p97[i]));
+            entriesP97.add(new Entry((float) age[i], (float) allP97[gen][mag][i]));
+            if(allP97[gen][mag][i] > yMax) yMax = allP97[gen][mag][i];
         }
         //getResources().getColor(R.color.red);
+        maxY[mag] = yMax;
 
         LineDataSet lineaP97 = new LineDataSet(entriesP97, "P. 97");
         lineaP97.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -344,8 +368,8 @@ public class Graph extends AppCompatActivity {
         double z = getZ(0.1);
 
         for (int i = 0; i < age.length; i++) {
-            double sd = (p97[i] - p50[i]) / 1.88;
-            double perc = z * sd + p50[i];
+            double sd = (allP97[gen][mag][i] - allP50[gen][mag][i]) / 1.88;
+            double perc = z * sd + allP50[gen][mag][i];
 
             entriesP10.add(new Entry((float) age[i], (float) perc));
         }
@@ -366,8 +390,8 @@ public class Graph extends AppCompatActivity {
         double z = getZ(0.25);
 
         for (int i = 0; i < age.length; i++) {
-            double sd = (p97[i] - p50[i]) / 1.88;
-            double perc = z * sd + p50[i];
+            double sd = (allP97[gen][mag][i] - allP50[gen][mag][i]) / 1.88;
+            double perc = z * sd + allP50[gen][mag][i];
 
             entriesP25.add(new Entry((float) age[i], (float) perc));
         }
@@ -389,8 +413,8 @@ public class Graph extends AppCompatActivity {
         double z = getZ(0.75);
 
         for (int i = 0; i < age.length; i++) {
-            double sd = (p97[i] - p50[i]) / 1.88;
-            double perc = z * sd + p50[i];
+            double sd = (allP97[gen][mag][i] - allP50[gen][mag][i]) / 1.88;
+            double perc = z * sd + allP50[gen][mag][i];
 
             entriesP75.add(new Entry((float) age[i], (float) perc));
         }
@@ -412,8 +436,8 @@ public class Graph extends AppCompatActivity {
         double z = getZ(0.9);
 
         for (int i = 0; i < age.length; i++) {
-            double sd = (p97[i] - p50[i]) / 1.88;
-            double perc = z * sd + p50[i];
+            double sd = (allP97[gen][mag][i] - allP50[gen][mag][i]) / 1.88;
+            double perc = z * sd + allP50[gen][mag][i];
 
             entriesP90.add(new Entry((float) age[i], (float) perc));
         }
