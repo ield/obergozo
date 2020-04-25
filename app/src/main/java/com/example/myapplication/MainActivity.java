@@ -173,12 +173,8 @@ public class MainActivity extends AppCompatActivity {
                     ResLongitud.setText("El percentil de longitud es: "+percentiles[0]);
                     ResPeso.setText("El percentil de peso es: "+percentiles[1]);
                     ResPerimetroCraneal.setText("El percentil de perímetro craneal es: "+percentiles[2]);
+                    ResIMC.setText("El percentil de IMC es: "+percentiles[3]);
 
-                    if (chica.isChecked()) {
-                        ResIMC.setText(calculaIMCChica());
-                    } else if (chico.isChecked()) {
-                        ResIMC.setText(calculaIMCChico());
-                    }
 
                     d.setYears(age);
                     d.setMeasures(medidas);
@@ -278,29 +274,6 @@ public class MainActivity extends AppCompatActivity {
         if(chico.isChecked()) gender = 0;
         else gender = 1;
         return gender;
-    }
-
-    
-
-    public String calculaIMCChica(){
-        double age = getAge();
-
-        CalculadoraIMCChicas c1 = new CalculadoraIMCChicas(age, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
-        d.setIMC(c1.getMedida());
-
-        return "El percentil de IMC es: "+Math.round(c1.getPercentil()*100.0);
-
-    }
-
-    public String calculaIMCChico(){
-
-        double age = getAge();
-
-
-        CalculadoraIMCChicos c1 = new CalculadoraIMCChicos(age, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
-        d.setIMC(c1.getMedida());
-        return "El percentil de IMC es: "+Math.round(c1.getPercentil()*100.0);
-
     }
 
 

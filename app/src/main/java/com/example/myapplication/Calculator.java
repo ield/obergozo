@@ -27,14 +27,28 @@ public class Calculator {
         this.interval = interval(age);
         this.fraction = fraction(interval, age);
 
-        for(int i = 0; i<3; i++){
-            perc[i] = calcPerc(i);
+        if(age <= 2){
+            for(int i = 0; i<perc.length; i++){
+                perc[i] = calcPerc(i);
+            }
+        }else{
+            for(int i = 0; i<perc.length; i++){
+                if(i == 2) continue;
+                perc[i] = calcPerc(i);
+            }
         }
+
+
 
     }
 
     private double calcPerc(int mag){
-        double measure = measures[mag];
+        double measure;
+        if(mag != 3) {
+            measure = measures[mag];
+        }else{
+            measure = measures[1]/Math.pow(measures[0]/100, 2);
+        }
 
         double p50 = getP50(interval, fraction, mag);
         double p97 = getP97(interval, fraction, mag);
