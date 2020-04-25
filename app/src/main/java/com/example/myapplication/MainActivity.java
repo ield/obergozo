@@ -3,13 +3,11 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.media.Image;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText perCranealText;
 
     private Button bCalcula;
-    private Button bNext;
+    private Button bPlotLength;
+    private Button bPlotWeigh;
+    private Button bPlotCranial;
+    private Button bPlotIMC;
 
     private TextView ResLongitud;
     private TextView ResPeso;
@@ -99,7 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         configuraBCalcula();
-        configuraBNext();
+        confBPlotLength();
+        confBPlotWeigh();
+        confBPlotCranial();
+        confBPlotIMC();
 
 
     }
@@ -170,22 +174,25 @@ public class MainActivity extends AppCompatActivity {
                     medidas[0] = Double.parseDouble(longitudText.getText().toString());
                     medidas[1] = Double.parseDouble(pesoText.getText().toString());
                     medidas[2] = Double.parseDouble(perCranealText.getText().toString());
-                    d.setMedidas(medidas);
+                    d.setMeasures(medidas);
                 }
             }
 
         });
     }
 
-    public void configuraBNext(){
-        bNext = (Button) findViewById(R.id.bNext);
-        bNext.setOnClickListener(new View.OnClickListener(){
+    public void confBPlotLength(){
+        bPlotLength = (Button) findViewById(R.id.bPlotLength);
+        bPlotLength.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent i = new Intent(MainActivity.this, Graph.class);
+                int gender = getGender();
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("dato", d); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("gender", gender);
+                bundle.putSerializable("magnitude", 0);
                 i.putExtras(bundle);
 
                 startActivity(i);
@@ -195,12 +202,85 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void confBPlotWeigh(){
+        bPlotWeigh = (Button) findViewById(R.id.bPlotWeigh);
+        bPlotWeigh.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(MainActivity.this, Graph.class);
+                int gender = getGender();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("dato", d); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("gender", gender);
+                bundle.putSerializable("magnitude", 1);
+                i.putExtras(bundle);
+
+                startActivity(i);
+
+            }
+
+        });
+    }
+
+    public void confBPlotCranial(){
+        bPlotCranial = (Button) findViewById(R.id.bPlotCranial);
+        bPlotCranial.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(MainActivity.this, Graph.class);
+                int gender = getGender();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("dato", d); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("gender", gender);
+                bundle.putSerializable("magnitude", 2);
+                i.putExtras(bundle);
+
+                startActivity(i);
+
+            }
+
+        });
+    }
+
+    public void confBPlotIMC(){
+        bPlotIMC = (Button) findViewById(R.id.bPlotIMC);
+        bPlotIMC.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(MainActivity.this, Graph.class);
+                int gender = getGender();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("dato", d); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("gender", gender);
+                bundle.putSerializable("magnitude", 3);
+                i.putExtras(bundle);
+
+                startActivity(i);
+
+            }
+
+        });
+    }
+
+
+
+
+    public int getGender(){
+        int gender;
+        if(chico.isChecked()) gender = 0;
+        else gender = 1;
+        return gender;
+    }
+
     public String calculaLongitudChica(){
         int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
         String nacimiento = dateText.getText().toString();
         int[] nac = convierteFechaArray(nacimiento);
         double anos = cuentaAnos(hoy, nac);
-        d.setAnos(anos);
+        d.setYears(anos);
         CalculadoraLongitudChicas c1 = new CalculadoraLongitudChicas(anos, Double.parseDouble(longitudText.getText().toString()));
         return "El percentil de longitud es: "+Math.round(c1.getPercentil()*100.0);
 
@@ -234,6 +314,8 @@ public class MainActivity extends AppCompatActivity {
         double anos = cuentaAnos(hoy, nac);
 
         CalculadoraIMCChicas c1 = new CalculadoraIMCChicas(anos, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
+        d.setIMC(c1.getMedida());
+
         return "El percentil de IMC es: "+Math.round(c1.getPercentil()*100.0);
 
     }
@@ -243,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
         String nacimiento = dateText.getText().toString();
         int[] nac = convierteFechaArray(nacimiento);
         double anos = cuentaAnos(hoy, nac);
+        d.setYears(anos);
 
         CalculadoraLongitudChicos c1 = new CalculadoraLongitudChicos(anos, Double.parseDouble(longitudText.getText().toString()));
         return "El percentil de longitud es: "+Math.round(c1.getPercentil()*100.0);
@@ -276,7 +359,9 @@ public class MainActivity extends AppCompatActivity {
         int[] nac = convierteFechaArray(nacimiento);
         double anos = cuentaAnos(hoy, nac);
 
+
         CalculadoraIMCChicos c1 = new CalculadoraIMCChicos(anos, Double.parseDouble(pesoText.getText().toString()),Double.parseDouble(longitudText.getText().toString()));
+        d.setIMC(c1.getMedida());
         return "El percentil de IMC es: "+Math.round(c1.getPercentil()*100.0);
 
     }

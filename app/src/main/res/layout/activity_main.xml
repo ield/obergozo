@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerInParent="true"
     tools:context=".MainActivity">
 
     <TextView
@@ -12,43 +13,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="@string/nacimiento"
-        android:textAlignment="gravity"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textStyle="bold"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="6dp"
         android:layout_marginRight="8dp"
+        android:text="@string/nacimiento"
+        android:textAlignment="gravity"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/dateText"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="@string/nacimientoHint"
         android:inputType="date"
-        android:layout_marginTop="2dp"
-        app:layout_constraintTop_toBottomOf="@+id/FechaNacimineto"
-        android:layout_marginRight="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/FechaNacimineto" />
 
     <TextView
         android:id="@+id/sexo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
         android:text="@string/sexo"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/dateText"
-        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
     <CheckBox
         android:id="@+id/chica"
@@ -65,10 +66,10 @@
         android:id="@+id/chico"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/niño"
-        app:layout_constraintLeft_toRightOf="@+id/chica"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
+        android:text="@string/niño"
+        app:layout_constraintLeft_toRightOf="@+id/chica"
         app:layout_constraintTop_toBottomOf="@+id/sexo" />
 
     <TextView
@@ -76,14 +77,14 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
         android:text="@string/longitud"
         android:textStyle="bold"
-        android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@+id/chico"
-        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chico" />
 
     <EditText
 
@@ -91,8 +92,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="2dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="@string/longitudHint"
         android:inputType="numberDecimal"
@@ -105,8 +106,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
         android:text="@string/peso"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -118,11 +119,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="2dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
-        android:inputType="numberDecimal"
         android:hint="@string/pesoHint"
+        android:inputType="numberDecimal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/peso" />
@@ -132,8 +133,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
         android:text="@string/pCraneal"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -145,11 +146,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="2dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
-        android:inputType="numberDecimal"
         android:hint="@string/pCranealHint"
+        android:inputType="numberDecimal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/perCraneal" />
@@ -158,12 +159,11 @@
         android:id="@+id/bCalcula"
         android:layout_width="149dp"
         android:layout_height="42dp"
-        android:text="@string/calcula"
         android:layout_marginTop="4dp"
-        app:layout_constraintTop_toBottomOf="@+id/perCranealText"
         android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent" />
-
+        android:text="@string/calcula"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/perCranealText" />
 
 
     <TextView
@@ -171,21 +171,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="8dp"
         android:text=""
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bCalcula"
-        android:layout_marginTop="10dp"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/bCalcula" />
 
     <TextView
         android:id="@+id/ResPeso"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -196,8 +196,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -208,8 +208,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:text=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -220,7 +220,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:text=""
         app:layout_constraintHorizontal_bias="0.0"
@@ -229,14 +229,67 @@
         app:layout_constraintTop_toBottomOf="@+id/ResIMC" />
 
     <Button
-        android:id="@+id/bNext"
+        android:id="@+id/bPlotLength"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:text="Gráfica Longitud"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/testDato" />
+
+    <Button
+        android:id="@+id/bPlotCranial"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:text="Gráfica Per. Craneal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bPlotLength" />
+
+    <Button
+        android:id="@+id/bPlotWeigh"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Gráfica Peso"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/testDato" />
+
+    <Button
+        android:id="@+id/bPlotIMC"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Gráfica IMC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/bPlotWeigh" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Next"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ResIMC" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="206dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

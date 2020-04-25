@@ -11,9 +11,10 @@ public class CalculadoraIMCChicos {
     private double[] p97 = {16.13, 19.9, 20.92, 21.34, 20.92, 19.92, 19.33, 18.95, 18.76, 18.57, 18.49, 18.45, 18.76, 19.04, 19.29, 19.65, 20.11, 20.62, 21.18, 21.75, 22.32, 22.87, 23.39, 23.88, 24.34, 24.77, 25.2, 25.63, 26.07, 26.54, 27.04, 27.58, 28.13, 28.68, 29.17, 29.53, 29.65, 29.4, 28.59};
 
     private double percentil;
+    private double medida;
 
     public CalculadoraIMCChicos(double age, double peso, double longitud){
-        double medida = peso/(Math.pow(longitud/100, 2));
+        this.medida = peso/(Math.pow(longitud/100, 2));
 
         int intervalo = intervalo(age);
         double fraccion = fraccion(intervalo, age);
@@ -23,6 +24,8 @@ public class CalculadoraIMCChicos {
         double z = (medida-p50)/sd;
         percentil = (CNDF(z));
     }
+
+    public double getMedida(){return this.medida;}
 
     public double getPercentil(){return this.percentil;}
 

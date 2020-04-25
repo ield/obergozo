@@ -3,23 +3,28 @@ package com.example.myapplication;
 import java.io.Serializable;
 
 public class Dato implements Serializable {
-    private double anos;
-    private double[] medidas;
+    private double years;
+    private double[] measures = new double[4];
 
-    public double getAnos() {
-        return this.anos;
+    public double getYears() {
+        return this.years;
     }
 
-    public double[] getMedidas() {
-        return this.medidas;
+    public double[] getMeasures() {
+        return this.measures;
     }
 
-    public void setAnos(double anos) {
-        this.anos = anos;
+    public void setYears(double years) {
+        this.years = years;
     }
 
-    public void setMedidas(double[] medidas) {
-        this.medidas = medidas;
+    public void setMeasures(double[] measures) {
+        for(int i = 0; i<measures.length; i++) {
+            this.measures[i] = measures[i];
+        }
+    }
+    public void setIMC(double IMC){
+        this.measures[3] = IMC;
     }
 
 }
