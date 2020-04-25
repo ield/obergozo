@@ -89,13 +89,19 @@ public class Graph extends AppCompatActivity {
      */
 
 
-    private double[] age = {0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18};
+    private double[] ageLong = {0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18};
+    private double[] ageShort = {0, 0.25, 0.5, 0.75, 1, 1.5, 2};
 
-    private double[][][] allP50 = new double[2][4][age.length];
-    private double[][][] allP97 = new double[2][4][age.length];
+    private double[] age;
+
+
+    private double[][][] allP50 = new double[2][4][ageLong.length];
+    private double[][][] allP97 = new double[2][4][ageLong.length];
 
     private double[]maxY = new double[4];
     private double[]minY = new double[4];
+
+    private int limSupAge;
 
     private String[] titleMag = {"Longitud", "Peso", "Perímetro Craneal", "IMC"};
     private String[] titleGen = {"Chico", "Chica"};
@@ -138,8 +144,16 @@ public class Graph extends AppCompatActivity {
 //        dato.setYears(1);
 
 
+        if(mag == 2){
+            this.age = this.ageShort;
+        }else{
+            this.age = this.ageLong;
+        }
+
         //Si se recibe un dato se procede a pintarlo
         plotDato();
+
+
 
         plotAllP();
 
@@ -237,7 +251,12 @@ public class Graph extends AppCompatActivity {
         ejeX.setEnabled(true);
         ejeX.setDrawLabels(true);//Esto es solo para poner los numeros del eje
         ejeX.setDrawAxisLine(true);
-        ejeX.setAxisMaximum(18);//TODO quitar numeros magicos
+
+        if(this.mag == 2){
+            ejeX.setAxisMaximum(2);
+        }else{
+            ejeX.setAxisMaximum(18);
+        }
         ejeX.setAxisMinimum(0);
 
 
