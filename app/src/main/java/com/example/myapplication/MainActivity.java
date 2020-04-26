@@ -62,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FechaNacimiento = (TextView) findViewById(R.id.FechaNacimineto);
+        // Configure the born date
+        FechaNacimiento = (TextView) findViewById(R.id.bornDate);
         dateText = (EditText) findViewById(R.id.dateText);
         dateText.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -71,14 +72,15 @@ public class MainActivity extends AppCompatActivity {
 
             }});
 
-        sexo = (TextView) findViewById(R.id.sexo);
-        chica = (CheckBox) findViewById(R.id.chica);
+        // Configure the checkbox girl and boy: when boy is checked girl is unchecked and viceversa
+        sexo = (TextView) findViewById(R.id.gender);
+        chica = (CheckBox) findViewById(R.id.girl);
         chica.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 if(chica.isChecked()) chico.setChecked(false);
             }});
-        chico = (CheckBox) findViewById(R.id.chico);
+        chico = (CheckBox) findViewById(R.id.boy);
         chico.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

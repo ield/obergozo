@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/FechaNacimineto"
+        android:id="@+id/bornDate"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,10 +36,10 @@
         android:inputType="date"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FechaNacimineto" />
+        app:layout_constraintTop_toBottomOf="@+id/bornDate" />
 
     <TextView
-        android:id="@+id/sexo"
+        android:id="@+id/gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
     <CheckBox
-        android:id="@+id/chica"
+        android:id="@+id/girl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -60,17 +60,17 @@
         android:checked="false"
         android:text="@string/niña"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sexo" />
+        app:layout_constraintTop_toBottomOf="@+id/gender" />
 
     <CheckBox
-        android:id="@+id/chico"
+        android:id="@+id/boy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
         android:text="@string/niño"
-        app:layout_constraintLeft_toRightOf="@+id/chica"
-        app:layout_constraintTop_toBottomOf="@+id/sexo" />
+        app:layout_constraintLeft_toRightOf="@+id/girl"
+        app:layout_constraintTop_toBottomOf="@+id/gender" />
 
     <TextView
         android:id="@+id/Longitud"
@@ -84,7 +84,7 @@
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chico" />
+        app:layout_constraintTop_toBottomOf="@+id/boy" />
 
     <EditText
 
