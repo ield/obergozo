@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class Inicio extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
+        setTitle("Inicio");
 
         bBaby1 = (Button) findViewById(R.id.bBaby1);
         arrayBabies.add(bBaby1);
@@ -46,6 +48,8 @@ public class Inicio extends AppCompatActivity {
         confBOtherBaby();
         confBNewBaby();
 
+        setTitle("Inicio");
+
     }
 
     private void confBOtherBaby(){
@@ -53,7 +57,7 @@ public class Inicio extends AppCompatActivity {
         bOtherBaby.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Inicio.this, MainActivity.class);
+                Intent i = new Intent(Inicio.this, InsertDataUnsaved.class);
                 startActivity(i);
             }
         });
@@ -75,7 +79,9 @@ public class Inicio extends AppCompatActivity {
 
     /**
      * Checks the saved babies
-     * Checks all the files and for every file, it sets visible a button with the name of the baby
+     * Checks all the files and for every file, it sets visible a button with the name of the baby.
+     * Como ver directorios: https://developer.android.com/studio/debug/device-file-explorer
+     *
      */
     private void checkBabies(){
         String[] files = getApplicationContext().fileList();
@@ -85,6 +91,18 @@ public class Inicio extends AppCompatActivity {
             String babyName = files[i].substring(0, files[i].length()-4);
             arrayBabies.get(i).setText(babyName);
             arrayBabies.get(i).setVisibility(View.VISIBLE);
+
+            final int finalI = i;
+            arrayBabies.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Inicio.this, InsertDataSaved.class);
+                    Bundle b = new Bundle();
+                    b.putSerializable("babyNumber", finalI);
+                    i.putExtras(b);
+                    startActivity(i);
+                }
+            });
         }
     }
 

@@ -6,7 +6,7 @@
  #1: implements Serializable en la clase del objeto que se quiere enviar
  #2: Para pasar de una clase a otra se hace lo siguiente
 
- Intent i = new Intent(MainActivity.this, Graph.class);
+ Intent i = new Intent(InsertDataUnsaved.this, Graph.class);
  Objeto o = new Objeto();
 
  Bundle bundle = new Bundle();
@@ -125,7 +125,8 @@ public class Graph extends AppCompatActivity {
     private LineChart lengthGraph;
 
     @Override
-    /*What to do when the activity is created:
+    /**
+     * What to do when the activity is created:
      * #1.  The android elements are initialized: the graph and the textView of the title
      * #2.  It is obtained the datum to be plotted: its measures, the gender and the magitude
      * #3.  Depending on the magnitude it is selected whether to use ageLong or short. If it is

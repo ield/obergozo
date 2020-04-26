@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewBaby"></activity>
+        <activity android:name=".InsertDataSaved"></activity>
+        <activity android:name=".NewBaby" />
         <activity
             android:name=".Inicio"
             android:label="@string/title_activity_inicio"
@@ -24,7 +25,7 @@
             android:name=".Graph"
             android:label="@string/title_activity_graph"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".InsertDataUnsaved" />
     </application>
 
 </manifest>

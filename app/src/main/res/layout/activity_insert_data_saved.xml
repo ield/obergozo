@@ -4,91 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerInParent="true"
-    tools:context=".MainActivity">
+    tools:context=".InsertDataSaved">
 
     <TextView
-        android:id="@+id/bornDate"
+        android:id="@+id/length"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/nacimiento"
-        android:textAlignment="gravity"
+        android:text="@string/longitud"
         android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/dateText"
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="@string/nacimientoHint"
-        android:inputType="date"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bornDate" />
-
-    <TextView
-        android:id="@+id/gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/sexo"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateText" />
-
-    <CheckBox
-        android:id="@+id/girl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:checked="false"
-        android:text="@string/niña"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gender" />
-
-    <CheckBox
-        android:id="@+id/boy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/niño"
-        app:layout_constraintLeft_toRightOf="@+id/girl"
-        app:layout_constraintTop_toBottomOf="@+id/gender" />
-
-    <TextView
-        android:id="@+id/Longitud"
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/longitud"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/boy" />
-
-    <EditText
-
-        android:id="@+id/longitudText"
+        android:id="@+id/lengthText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -99,10 +34,10 @@
         android:inputType="numberDecimal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Longitud" />
+        app:layout_constraintTop_toBottomOf="@+id/length" />
 
     <TextView
-        android:id="@+id/peso"
+        android:id="@+id/weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -112,10 +47,10 @@
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longitudText" />
+        app:layout_constraintTop_toBottomOf="@+id/lengthText" />
 
     <EditText
-        android:id="@+id/pesoText"
+        android:id="@+id/weightText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -126,10 +61,10 @@
         android:inputType="numberDecimal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/peso" />
+        app:layout_constraintTop_toBottomOf="@+id/weight" />
 
     <TextView
-        android:id="@+id/perCraneal"
+        android:id="@+id/cranial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -139,10 +74,10 @@
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pesoText" />
+        app:layout_constraintTop_toBottomOf="@+id/weightText" />
 
     <EditText
-        android:id="@+id/perCranealText"
+        android:id="@+id/cranialText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -153,17 +88,17 @@
         android:inputType="numberDecimal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/perCraneal" />
+        app:layout_constraintTop_toBottomOf="@+id/cranial" />
 
     <Button
-        android:id="@+id/bCalcula"
+        android:id="@+id/bCalculate"
         android:layout_width="149dp"
         android:layout_height="42dp"
         android:layout_marginTop="4dp"
         android:layout_marginRight="16dp"
         android:text="@string/calcula"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/perCranealText" />
+        app:layout_constraintTop_toBottomOf="@+id/cranialText" />
 
 
     <TextView
@@ -177,7 +112,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bCalcula" />
+        app:layout_constraintTop_toBottomOf="@+id/bCalculate" />
 
     <TextView
         android:id="@+id/ResPeso"

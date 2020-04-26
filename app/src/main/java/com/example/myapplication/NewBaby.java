@@ -45,6 +45,7 @@ public class NewBaby extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_baby);
+        setTitle("Nuev@ bebé");
 
         // Configure the born date
         bornDate = (TextView) findViewById(R.id.bornDate);

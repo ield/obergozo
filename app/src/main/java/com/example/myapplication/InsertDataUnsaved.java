@@ -14,7 +14,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+public class InsertDataUnsaved extends AppCompatActivity {
 
     private TextView FechaNacimiento;
     private EditText dateText;
@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView ResPerimetroCraneal;
     private TextView ResIMC;
 
-    private TextView testDato;
-
     Calendar today = Calendar.getInstance();
     private String falloFecha = "Fecha no válida";
     private String falloCheckBox = "Marca si es chico o chica";
@@ -60,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
     //All the Android elements are initialized and all the buttons are set to be configured
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_insert_data_unsaved);
+        setTitle("Introduce los datos");
 
         // Configure the born date
         FechaNacimiento = (TextView) findViewById(R.id.bornDate);
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         dateText.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                new DatePickerDialog(MainActivity.this, date, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(InsertDataUnsaved.this, date, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)).show();
 
             }});
 
@@ -87,14 +86,14 @@ public class MainActivity extends AppCompatActivity {
                 if(chico.isChecked()) chica.setChecked(false);
             }});
 
-        Longitud = (TextView) findViewById(R.id.Longitud);
-        longitudText = (EditText) findViewById(R.id.longitudText);
+        Longitud = (TextView) findViewById(R.id.length);
+        longitudText = (EditText) findViewById(R.id.lengthText);
 
-        peso = (TextView) findViewById(R.id.peso);
-        pesoText = (EditText) findViewById(R.id.pesoText);
+        peso = (TextView) findViewById(R.id.weight);
+        pesoText = (EditText) findViewById(R.id.weightText);
 
-        perCraneal = (TextView) findViewById(R.id.perCraneal);
-        perCranealText = (EditText) findViewById(R.id.perCranealText);
+        perCraneal = (TextView) findViewById(R.id.cranial);
+        perCranealText = (EditText) findViewById(R.id.cranialText);
 
         ResLongitud = (TextView) findViewById(R.id.ResLongitud);
         ResPeso = (TextView) findViewById(R.id.ResPeso);
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
      *      all the information is gathered
      */
     public void configuraBCalcula(){
-        bCalcula = (Button) findViewById(R.id.bCalcula);
+        bCalcula = (Button) findViewById(R.id.bCalculate);
         bCalcula.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -233,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         bPlotLength.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent i = new Intent(MainActivity.this, Graph.class);
+                Intent i = new Intent(InsertDataUnsaved.this, Graph.class);
                 int gender = getGender();
 
                 Bundle bundle = new Bundle();
@@ -254,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
         bPlotWeigh.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent i = new Intent(MainActivity.this, Graph.class);
+                Intent i = new Intent(InsertDataUnsaved.this, Graph.class);
                 int gender = getGender();
 
                 Bundle bundle = new Bundle();
@@ -275,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
         bPlotCranial.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent i = new Intent(MainActivity.this, Graph.class);
+                Intent i = new Intent(InsertDataUnsaved.this, Graph.class);
                 int gender = getGender();
 
                 Bundle bundle = new Bundle();
@@ -296,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
         bPlotIMC.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent i = new Intent(MainActivity.this, Graph.class);
+                Intent i = new Intent(InsertDataUnsaved.this, Graph.class);
                 int gender = getGender();
 
                 Bundle bundle = new Bundle();
