@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,9 +11,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Calendar;
 
 import static java.lang.Integer.parseInt;
@@ -46,11 +52,12 @@ public class InsertDataSaved extends AppCompatActivity {
     private String falloPC = "Introduce el diámetro craneal";
 
     //Information of the baby
+    private String fileName;
     private String name;
     private int gender;
     private String birthDate;
 
-    private double[] medidas = new double[3];
+    private double[] medidas = new double[4];
 
     @Override
     /**
@@ -97,7 +104,7 @@ public class InsertDataSaved extends AppCompatActivity {
      *         https://developer.android.com/training/data-storage/app-specific#java
      */
     public void getBaby(int i){
-        String fileName = getApplicationContext().fileList()[i];
+        fileName = getApplicationContext().fileList()[i];
         try{
             FileInputStream fis = getApplicationContext().openFileInput(fileName);
             InputStreamReader isr = new InputStreamReader(fis);
@@ -172,6 +179,7 @@ public class InsertDataSaved extends AppCompatActivity {
                     // #3
                     Calculator c1 =  new Calculator(age, medidas, gender);
                     int[] percentiles = c1.getPerc();
+                    medidas[3] = c1.getIMC();
 
                     // #4
                     ResLongitud.setText("El percentil de longitud es: "+percentiles[0]);
@@ -180,9 +188,7 @@ public class InsertDataSaved extends AppCompatActivity {
                     ResIMC.setText("El percentil de IMC es: "+percentiles[3]);
 
                     // #5
-//                    d.setYears(age);
-//                    d.setMeasures(medidas);
-//                    d.setIMC(c1.getIMC());
+                    saveData();
                 }
             }
 
@@ -313,4 +319,112 @@ public class InsertDataSaved extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Saves the data in the file of the baby
+     * Checks the date is not yet introduced. If it is it replaces it. Step 1, 2 are checked
+     * #1   Looks for the last date introduced
+     * #2   Looks if the last date introduced was today or not.
+     * #3   If it is the first of the day, it writes the datum. If it is not, it deletes the last
+     *      line and writes the new one
+     */
+    private void saveData(){
+        try{
+            FileInputStream fis = getApplicationContext().openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(isr);
+
+            // #1
+            String lastLine = "";
+            String data = "";
+            String dataNoLastLine = "";//Here is saves the data without the last line
+            String line = reader.readLine();
+            while (line != null) {
+                dataNoLastLine = data;
+                data += (line+"\n");
+                lastLine = line;
+                line = reader.readLine();
+            }
+            int space = lastLine.indexOf(" ");
+
+            // #2
+            if(space == -1) insertData(data); //When it is the first datum, the line before has no space
+            else{ //When the line before has another data it checks if the dates are the same
+                String date = lastLine.substring(0, space);
+                boolean used = checkUsed(date);
+
+                // #3
+                if(!used) insertData(data);//When it is the first measure of the day it is inserted
+                else{//When it is not the first measure of the day it is deleted the last line
+                    insertData(dataNoLastLine);
+//                    Toast toast = Toast.makeText(getApplicationContext(), "We are OK", Toast.LENGTH_SHORT);
+//                    toast.show();
+                }
+
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * Check if the date passed is today
+     * @param s the date given
+     * @return true if the date is used
+     */
+    private boolean checkUsed(String s){
+        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
+        int[] date = convierteFechaArray(s);
+
+        if(hoy[0] == date[0] && hoy[1] == date[1] && hoy[2] == date[2]) return true;
+
+        return false;
+    }
+
+    /**
+     * Inserts the data into the baby file
+     * @param previousData The string to insert
+     * It deletes all the information in the txt file and inserts the new one. This is not very
+     *                     efficient but it the only solution I came up with. The new one is the
+     *                     previous information with or without the last line + the datum recorded
+     *                     today:
+     *                     date age length weight crannial imc
+     *                     #1. Creates the string that will be in the file
+     *                     #2. Inserts the string in the file
+     * @// TODO: 07/05/2020 make it more efficient!! (only write the last line, not rewrite the whole document)
+     */
+    private void insertData(String previousData){
+
+        // #1
+        int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
+        String todayDate = (hoy[0] + "/" + hoy[1] + "/" + hoy[2]);
+        String newInfo = todayDate + " " + getAge();
+
+        for(int i = 0; i<medidas.length; i++){
+            newInfo += " " + medidas[i];
+        }
+
+        previousData = previousData + newInfo;
+
+        // #2
+        try{
+            FileOutputStream fos = getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+            OutputStreamWriter writer = new OutputStreamWriter(fos);
+            writer.append(previousData);
+            writer.close();
+            fos.close();
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se han guardado las medidas", Toast.LENGTH_SHORT);
+            toast.show();
+        }catch(IOException e){
+            e.printStackTrace();
+            Toast toast = Toast.makeText(getApplicationContext(), "There has been a problem", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
+    }
+
 }

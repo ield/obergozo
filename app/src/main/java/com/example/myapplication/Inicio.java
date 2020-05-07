@@ -8,7 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +54,8 @@ public class Inicio extends AppCompatActivity {
         confBNewBaby();
 
         setTitle("Inicio");
+
+        createTestBabyFile();//This file is used for tests
 
     }
 
@@ -104,6 +111,33 @@ public class Inicio extends AppCompatActivity {
                 }
             });
         }
+    }
+
+
+    /**
+     * Test file created for future checks
+     */
+    public void createTestBabyFile(){
+
+        try{
+            File newBaby = new File(getApplicationContext().getFilesDir(), "BabyTest.txt");
+            newBaby.createNewFile();
+            FileWriter fw = new FileWriter(newBaby);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            bw.write("BebeTest" + "\n");
+            bw.write(0 + "\n");
+            bw.write("1/4/2020" + "\n");
+            bw.write("24/4/2020 Esto es un test" + "\n");
+            bw.write("25/4/2020 Esto es un test" + "\n");
+            bw.write("7/5/2020 Esto es el last test test" + "\n");
+            bw.flush();
+            bw.close();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
     }
 
 
