@@ -127,10 +127,11 @@ public class Inicio extends AppCompatActivity {
 
             bw.write("BebeTest" + "\n");
             bw.write(0 + "\n");
-            bw.write("1/4/2020" + "\n");
-            bw.write("24/4/2020 Esto es un test" + "\n");
-            bw.write("25/4/2020 Esto es un test" + "\n");
-            bw.write("7/5/2020 Esto es el last test test" + "\n");
+            bw.write("1/4/2019" + "\n");
+            bw.write("1/4/2020 0 51 3.5 35 14 " + "\n");
+            bw.write("1/4/2020 0.25 61 7 42 18 " + "\n");
+            bw.write("1/5/2020 0.5 67 8 45 17 " + "\n");
+            bw.write("1/5/2020 0.75 72 10 46 18 " + "\n");
             bw.flush();
             bw.close();
 

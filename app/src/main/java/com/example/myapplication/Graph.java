@@ -44,11 +44,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static java.lang.Math.round;
 
 /**
@@ -81,6 +87,14 @@ public class Graph extends AppCompatActivity {
     private Dato dato = null;//Este es el dato que se recibe de las medidas tomadas por la app
     private int gen; //Gender, used to select in the 3d array
     private int mag; //Magnitude used to select what measure is to be plotted
+
+    /*
+    Data related to the baby
+     */
+    private int babyNumber;
+    private String fileName;
+    private String name;
+    private String birthDate;
 
     /*
     Two different age arrays are created. This is because when it is plotted the cranial perimeter,
@@ -149,12 +163,18 @@ public class Graph extends AppCompatActivity {
 
         // #2
         Bundle receivedObj = getIntent().getExtras();
-        dato = (Dato) receivedObj.getSerializable("dato");
-        gen = (int) receivedObj.getSerializable("gender");
-        mag = (int) receivedObj.getSerializable("magnitude");
+        if((Dato) receivedObj.getSerializable("dato") == null){
+            babyNumber = (int)receivedObj.getSerializable("babyNumber");
+            getBaby(babyNumber);
+            mag = (int) receivedObj.getSerializable("magnitude");
+        }else{
+            dato = (Dato) receivedObj.getSerializable("dato");
+            gen = (int) receivedObj.getSerializable("gender");
+            mag = (int) receivedObj.getSerializable("magnitude");
 //        double[] medidasTest = {74, 8.8, 46};
 //        dato.setMeasures(medidasTest);
 //        dato.setYears(1);
+        }
 
         // #3
         if(mag == 2){
@@ -166,8 +186,13 @@ public class Graph extends AppCompatActivity {
         // #4
         generateData();
 
+//        Toast toast = Toast.makeText(getApplicationContext(), "Hasta aquí llegamos", Toast.LENGTH_SHORT);
+//        toast.show();
+
         // #5
-        plotDato();
+        if((Dato) receivedObj.getSerializable("dato") == null) plotData();
+        else plotDato();
+
         plotAllP();
 
         // #6
@@ -177,6 +202,32 @@ public class Graph extends AppCompatActivity {
         LineData lineData = new LineData(todasMedidas);
         lengthGraph.setData(lineData);
         lengthGraph.invalidate();
+
+    }
+
+    /**
+     * Obtains the name, born date and gender of the baby from its document. Step 2
+     * @param i The number of the baby, given by the last activity, which knew it because of the
+     *          button pressed.
+     * How to read the file was known from:
+     *         https://developer.android.com/training/data-storage/app-specific#java
+     */
+    public void getBaby(int i){
+        fileName = getApplicationContext().fileList()[i];
+        try{
+            FileInputStream fis = getApplicationContext().openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(isr);
+            this.name = reader.readLine();
+            this.gen = parseInt(reader.readLine());
+            this.birthDate = reader.readLine();
+            reader.close();
+            isr.close();
+            fis.close();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -257,6 +308,88 @@ public class Graph extends AppCompatActivity {
         allP97[0][3] = p97_IMC;
     }
 
+    /**
+     * Plotting Data: Step #5
+     * Plotting data consists on adding LineDataSet, which are formed by arrayList of entries.
+     * An entry has an x and a y.
+     * The data is obtained from the baby file.
+     * All data is plotted as a circle. The color is set to black
+     *  #1. Select the file to read
+     *  #2. Omit the first three lines: the name, age and gender of the baby
+     *  #3. For every line obtain the age and the magnitud wanted to plot and create and entry with
+     *      that measure.
+ *      #4. Add all the entries
+     */
+    private void plotData(){
+        List<Entry> entriesMedidas = new ArrayList<Entry>();
+        try{
+            // #1
+            FileInputStream fis = getApplicationContext().openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader reader = new BufferedReader(isr);
+
+            // #2. Skips the name, birthdate and gender of the baby
+            reader.readLine();
+            reader.readLine();
+            reader.readLine();
+
+            // #3
+            String line = reader.readLine();//First line with data
+
+            while (line != null) {
+                double[] datum = obtainSubstring(line, mag);
+                entriesMedidas.add(new Entry((float) datum[0], (float) datum[1]));
+
+                line = reader.readLine();
+            }
+
+            reader.close();
+            isr.close();
+            fis.close();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+        // #4
+        LineDataSet lineaMedidas = new LineDataSet(entriesMedidas, this.name);
+        lineaMedidas.setAxisDependency(YAxis.AxisDependency.LEFT);
+        lineaMedidas.setColor(ColorTemplate.rgb("0A0A0A"));
+        lineaMedidas.setCircleColor(ColorTemplate.rgb("0A0A0A"));
+        todasMedidas.add(lineaMedidas);
+
+    }
+
+    /**
+     * Obtains the age and the magnitude that must be plotted
+     * @param s the line containin all the data (date, age, length, weight, crannial and imc)
+     * @param mag the magnitud that must be obtained
+     * @return an array [age magnitude]
+     *
+     * It looks in the string for the age: the number between the 1st and 2nd space
+     * It looks in the string for the magnitude, the number between the n and n+1 where n depends on
+     *  the magnitude. It is written date age length wright crannial imc (with a space at the end)
+     */
+    private double[] obtainSubstring(String s, int mag) {
+        double[] result = new double[2];
+
+        //Look for magnitude
+        int lastPos = 0;
+        for(int i = 0; i<(mag + 2); i++) {
+            lastPos = s.indexOf(" ", lastPos+1);
+        }
+
+        int nextSpace = s.indexOf(" ", lastPos+1);
+        result[1] = Double.parseDouble(s.substring(lastPos+1, nextSpace + 1));
+
+        //Look for age
+        int firstSpace = s.indexOf(" ");
+        int secondSpace = s.indexOf(" ", firstSpace+1);
+
+        result[0] = Double.parseDouble(s.substring(firstSpace+1, secondSpace + 1));
+
+        return result;
+    }
 
     /**
      * Plotting Data: Step #5
@@ -492,7 +625,9 @@ public class Graph extends AppCompatActivity {
         lengthGraph.getAxisRight().setEnabled(false);//Asi no se ve el eje de la derecha
 
         //Adjusting the title
-        String title = titleMag[mag] + " " + titleGen[gen];
+        String title;
+        if(dato == null) title = titleMag[mag] + " " + this.name;
+        else title = titleMag[mag] + " " + titleGen[gen];
         textTitulo.setText(title);
 
         //Adjusting the legend

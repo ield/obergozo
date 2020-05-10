@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.util.Calendar;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.Math.round;
 
 public class InsertDataSaved extends AppCompatActivity {
 
@@ -52,6 +54,7 @@ public class InsertDataSaved extends AppCompatActivity {
     private String falloPC = "Introduce el diámetro craneal";
 
     //Information of the baby
+    private int babyNumber;
     private String fileName;
     private String name;
     private int gender;
@@ -87,12 +90,15 @@ public class InsertDataSaved extends AppCompatActivity {
 
         // #2
         Bundle receivedObj = getIntent().getExtras();
-        int i = (int)receivedObj.getSerializable("babyNumber");
-        getBaby(i);
+        this.babyNumber = (int)receivedObj.getSerializable("babyNumber");
+        getBaby(babyNumber);
 
         // #3
         confBCalc();
-
+        confBPlotLength();
+        confBPlotWeigh();
+        confBPlotCranial();
+        confBPlotIMC();
 
     }
 
@@ -179,7 +185,7 @@ public class InsertDataSaved extends AppCompatActivity {
                     // #3
                     Calculator c1 =  new Calculator(age, medidas, gender);
                     int[] percentiles = c1.getPerc();
-                    medidas[3] = c1.getIMC();
+                    medidas[3] = round(c1.getIMC()*1000.0)/1000.0;
 
                     // #4
                     ResLongitud.setText("El percentil de longitud es: "+percentiles[0]);
@@ -401,11 +407,13 @@ public class InsertDataSaved extends AppCompatActivity {
         // #1
         int[] hoy = {today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH)+1, today.get(Calendar.YEAR)};
         String todayDate = (hoy[0] + "/" + hoy[1] + "/" + hoy[2]);
-        String newInfo = todayDate + " " + getAge();
+        double ageRound = round(getAge()*1000.0)/1000.0;
+        String newInfo = todayDate + " " + ageRound;
 
         for(int i = 0; i<medidas.length; i++){
             newInfo += " " + medidas[i];
         }
+        newInfo += " ";//So that there are no errors when looking for the last parameter
 
         previousData = previousData + newInfo;
 
@@ -426,5 +434,91 @@ public class InsertDataSaved extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Listeners for all the graphing buttons
+     * It is launched the new class, where it is given what it needs to be ploted:
+     *  Dato:       the datum just introduces. Maybe it is null: it is posible to see the graphs
+     *              with no data
+     *  Gender:     The gender of the baby. By default will be a girl
+     *  Magnitude:  The magnitude to plot: 0 = length, 1 = weight, 2 = cranial, 3 = imc. Depends on
+     *              the button it will be set one or another.
+     */
+    public void confBPlotLength(){
+        bPlotLength = (Button) findViewById(R.id.bPlotLength);
+        bPlotLength.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(InsertDataSaved.this, Graph.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("babyNumber", babyNumber); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("magnitude", 0);
+                i.putExtras(bundle);
+
+                startActivity(i);
+
+            }
+
+        });
+    }
+
+    public void confBPlotWeigh(){
+        bPlotWeigh = (Button) findViewById(R.id.bPlotWeigh);
+        bPlotWeigh.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(InsertDataSaved.this, Graph.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("babyNumber", babyNumber); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("magnitude", 1);
+                i.putExtras(bundle);
+
+                startActivity(i);
+
+            }
+
+        });
+    }
+
+    public void confBPlotCranial(){
+        bPlotCranial = (Button) findViewById(R.id.bPlotCranial);
+        bPlotCranial.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(InsertDataSaved.this, Graph.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("babyNumber", babyNumber); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("magnitude", 2);
+                i.putExtras(bundle);
+
+                startActivity(i);
+            }
+
+        });
+    }
+
+    public void confBPlotIMC(){
+        bPlotIMC = (Button) findViewById(R.id.bPlotIMC);
+        bPlotIMC.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent i = new Intent(InsertDataSaved.this, Graph.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("babyNumber", babyNumber); //donde "dato" es la clave y dato el objeto que se va a pasar
+                bundle.putSerializable("magnitude", 3);
+                i.putExtras(bundle);
+
+                startActivity(i);
+
+            }
+
+        });
+    }
+
+
 
 }
