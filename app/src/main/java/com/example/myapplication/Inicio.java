@@ -92,10 +92,11 @@ public class Inicio extends AppCompatActivity {
      */
     private void checkBabies(){
         String[] files = getApplicationContext().fileList();
-        if(files == null) return;
+        String[] txtFiles = getTxt(files);
+        if(txtFiles == null) return;
 
-        for(int i = 0; i<Math.min(files.length, arrayBabies.size()); i++){
-            String babyName = files[i].substring(0, files[i].length()-4);
+        for(int i = 0; i<Math.min(txtFiles.length, arrayBabies.size()); i++){
+            String babyName = txtFiles[i].substring(0, txtFiles[i].length()-4);
             arrayBabies.get(i).setText(babyName);
             arrayBabies.get(i).setVisibility(View.VISIBLE);
 
@@ -111,6 +112,45 @@ public class Inicio extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    /**
+     * From all the files in the folder selects only the txt ones
+     * #1. Counts the number of files that end in .txt
+     * #2. Saves in an array all the .txt files
+     */
+    private String[] getTxt(String[] allFiles) {
+        int numTxtFiles = 0;
+
+        for(int i = 0; i<allFiles.length; i++) {
+            try {//May be exceptions if the tring is shorter than 4 characters and not a .txt
+                String end = allFiles[i].substring(allFiles[i].length()-4);
+
+                if(end.contentEquals(".txt")) {
+                    numTxtFiles++;
+                }
+
+            }catch(Exception e) {}
+
+        }
+
+        String[] txtFiles = new String[numTxtFiles];
+        int pos = 0;
+
+        for(int i = 0; i<allFiles.length; i++) {
+            try {//May be exceptions if the tring is shorter than 4 characters and not a .txt
+                String end = allFiles[i].substring(allFiles[i].length()-4);
+
+                if(end.contentEquals(".txt")) {
+                    txtFiles[pos] = allFiles[i];
+                    pos++;
+                }
+
+            }catch(Exception e) {}
+
+        }
+
+        return txtFiles;
     }
 
 

@@ -213,7 +213,10 @@ public class Graph extends AppCompatActivity {
      *         https://developer.android.com/training/data-storage/app-specific#java
      */
     public void getBaby(int i){
-        fileName = getApplicationContext().fileList()[i];
+        String[] files = getApplicationContext().fileList();
+        String[] txtFiles = getTxt(files);
+        fileName = txtFiles[i];
+
         try{
             FileInputStream fis = getApplicationContext().openFileInput(fileName);
             InputStreamReader isr = new InputStreamReader(fis);
@@ -221,14 +224,50 @@ public class Graph extends AppCompatActivity {
             this.name = reader.readLine();
             this.gen = parseInt(reader.readLine());
             this.birthDate = reader.readLine();
-            reader.close();
-            isr.close();
-            fis.close();
 
         }catch(IOException e){
             e.printStackTrace();
         }
+        setTitle(name);
+    }
 
+    /**
+     * From all the files in the folder selects only the txt ones
+     * #1. Counts the number of files that end in .txt
+     * #2. Saves in an array all the .txt files
+     */
+    private String[] getTxt(String[] allFiles) {
+        int numTxtFiles = 0;
+
+        for(int i = 0; i<allFiles.length; i++) {
+            try {//May be exceptions if the tring is shorter than 4 characters and not a .txt
+                String end = allFiles[i].substring(allFiles[i].length()-4);
+
+                if(end.contentEquals(".txt")) {
+                    numTxtFiles++;
+                }
+
+            }catch(Exception e) {}
+
+        }
+
+        String[] txtFiles = new String[numTxtFiles];
+        int pos = 0;
+
+        for(int i = 0; i<allFiles.length; i++) {
+            try {//May be exceptions if the tring is shorter than 4 characters and not a .txt
+                String end = allFiles[i].substring(allFiles[i].length()-4);
+
+                if(end.contentEquals(".txt")) {
+                    txtFiles[pos] = allFiles[i];
+                    pos++;
+                }
+
+            }catch(Exception e) {}
+
+        }
+
+        return txtFiles;
     }
 
     /**
